@@ -3,20 +3,15 @@ import math
 import CNN
 import torch
 import shutil
-import ResNet
 import DenseNet
 import datetime
 import numpy as np
 import tensorboardX
-import refined_CNN
-import refined_ResNet
 import refined_DenseNet
 import torch.nn as nn
 from config import opt
-from mix_up import mixup
-from torchsummary import summary
 from refined_prediction import test
-from load_data import my_DataSet,IMG_Folder,move_augmentation
+from load_data import IMG_Folder
 from sklearn.metrics import mean_absolute_error
 from loss import AGE_difference,SpearmanLoss,rank_difference
 
@@ -31,8 +26,7 @@ def main(res):
     print("=========== start train the age prediction model ----------")
     print(" ==========> Using {} processes for data loader.".format(opt.num_workers))
 
-    trans = move_augmentation()
-    train_data = IMG_Folder(opt.excel_path, opt.train_folder,transforms=trans)
+    train_data = IMG_Folder(opt.excel_path, opt.train_folder)
     valid_data = IMG_Folder(opt.excel_path, opt.valid_folder)
     
         #--------   define data loader --------  
@@ -81,7 +75,6 @@ def main(res):
 
 
     optimizer = torch.optim.Adam(model.parameters(), lr=opt.lr, weight_decay=0.0005, amsgrad=True)
-    # optimizer = torch.optim.SGD(model.parameters(),lr=opt.lr,weight_decay=0.0005,momentum=0.9)
     scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer,verbose=1,patience=3,factor=0.5)
     early_stopping = EarlyStopping(patience=20, verbose=True)
 
@@ -353,6 +346,7 @@ def discriminate_age(age, range=5):
         dis_age = np.asarray(dis,dtype='float32')
         dis_age = np.expand_dims(dis_age,axis=1)
         dis_age = torch.from_numpy(dis_age)
+
     return dis_age
 
 if __name__ == "__main__":
@@ -363,11 +357,6 @@ if __name__ == "__main__":
     if not os.path.exists(opt.output_dir):
         os.makedirs(opt.output_dir)
         # save train config
-    os.system('cp bash_refined.sh {}'.format(opt.output_dir))
-    os.system('cp refined_DenseNet.py {}'.format(opt.output_dir))
-    os.system('cp refined_CNN.py {}'.format(opt.output_dir))
-    os.system('cp refined_train.py {}'.format(opt.output_dir))
-
     print('=> training from scratch.\n')
     res = os.path.join(opt.output_dir, 'result')
     os.system('echo "train {}" >> {}'.format(datetime.datetime.now(), res))

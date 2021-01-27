@@ -25,8 +25,6 @@ print("=> weight decay     : {}".format(opt.weight_decay))
 print("=> aux loss         : {}x{}".format(opt.aux_loss, opt.beta))
 print("=> number of pair:  : {}".format(opt.num_pair))
 
-# wandb.init(config=opt,project='brain-age')
-
 
 def main(res):
     best_metric = 100
@@ -67,7 +65,6 @@ def main(res):
         model = ScaleDense.ScaleDense(8, 5, opt.use_gender)
     else:
         print('Wrong model choose')
-
 
     model.apply(weights_init)
     model = nn.DataParallel(model).to(device)
