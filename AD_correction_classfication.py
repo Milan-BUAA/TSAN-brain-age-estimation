@@ -1,14 +1,9 @@
 import os
-from numpy.core.fromnumeric import size
 import sklearn
 import numpy as np
-import seaborn as sns
 import matplotlib.pyplot as plt
-from sklearn import svm,metrics
-from sklearn.metrics import mean_absolute_error
+from sklearn import svm
 from sklearn.linear_model import LinearRegression
-from scipy.stats import pearsonr,spearmanr
-from pandas import Series, DataFrame
 from sklearn.metrics import roc_curve,confusion_matrix,roc_auc_score,accuracy_score
 from sklearn.model_selection import StratifiedShuffleSplit
 np.random.seed(12345)
@@ -73,11 +68,7 @@ def classfication(NC_PAD, MCI_PAD, AD_PAD, cli_type=1):
     TARGET = []
     PROB = []
     # ======== cross validation ======== #
-    '''
-    Best estimator found by grid search:
-    SVC  C=10, , cache_size=200, class_weight='balanced', gamma=0.125
-    '''
-
+    
     for train_index, test_index in sss.split(x, y):
         x_train, x_test = x[train_index], x[test_index]
         y_train, y_test = y[train_index], y[test_index]
@@ -128,10 +119,10 @@ def roc(targets, probas, auc):
     plt.title('ROC', fontsize=20)
 
 def main():
-    Regresstion_fit_data_root = './TMI_result/old_result/model6/'
+    Regresstion_fit_data_root = './TSAN_train/'
     beta, alpha = get_correction_parameter(Regresstion_fit_data_root) 
 
-    cla_data_root = './TMI_result/supply_result/classfication/'
+    cla_data_root = './AD_classfication/'
     model_name = 'tsan-mse-ranking-'
     NC_predicion, NC_target, NC_brain_age_difference = load_cla_data(
                                                       cla_data_root
