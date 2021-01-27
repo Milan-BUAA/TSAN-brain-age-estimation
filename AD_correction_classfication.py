@@ -37,9 +37,6 @@ def get_correction_parameter(Regresstion_fit_data_root=None):
 def Bias_correction(target, prediction, beta, alpha):
     correct_prediction = prediction - (alpha*target + beta)
     correct_gap = correct_prediction - target
-    # correct_gap = np.squeeze(correct_gap,axis=1)
-    # target = np.squeeze(target,axis=1)
-    # correct_prediction = np.squeeze(correct_prediction,axis=1)
     return correct_prediction, target, correct_gap
 
 def load_cla_data(cla_data_root,model_name,subgroup):
@@ -115,8 +112,6 @@ def classfication(NC_PAD, MCI_PAD, AD_PAD, cli_type=1):
     print('mean SPE : ',np.mean(SPE))
     PROB = (np.asarray(PROB)).flatten()
     TARGET = (np.asarray(TARGET,dtype=int)).flatten()
-
-    # roc(TARGET, PROB, np.mean(AUC))
     return PROB, TARGET
 
 def roc(targets, probas, auc):
@@ -133,7 +128,6 @@ def roc(targets, probas, auc):
     plt.title('ROC', fontsize=20)
 
 def main():
-    # plt.figure()
     Regresstion_fit_data_root = './TMI_result/old_result/model6/'
     beta, alpha = get_correction_parameter(Regresstion_fit_data_root) 
 
@@ -167,16 +161,15 @@ def main():
     
     print('===== Without Bias correction =====')
     a = classfication(NC_brain_age_difference
-                , MCI_brain_age_difference
-                , AD_brain_age_difference
-                , cli_type)
+                    , MCI_brain_age_difference
+                    , AD_brain_age_difference
+                    , cli_type)
 
     print('===== Bias correction =====')
     a = classfication(Bias_corrected_NC_PAD
-                , Bias_corrected_MCI_PAD
-                , Bias_corrected_AD_PAD
-                , cli_type)
-    plt.show()
+                    , Bias_corrected_MCI_PAD
+                    , Bias_corrected_AD_PAD
+                    , cli_type)
 
 main()
 
