@@ -64,7 +64,7 @@ class dense_layer(nn.Module):
 
         return x
 
-class dense_net(nn.Module):
+class ScaleDense(nn.Module):
     '''
     Develop Scale dense \\
     parameter：\\
@@ -131,7 +131,7 @@ class dense_net(nn.Module):
 
 if __name__ == "__main__":
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu") 
-    model = dense_net(8,5,True).to(device)
+    model = ScaleDense(8,5,True).to(device)
 
     iuput = torch.autograd.Variable(torch.rand(6,1,91,109,91)).to(device)
     male_input = torch.autograd.Variable(torch.rand(6,2)).to(device)
