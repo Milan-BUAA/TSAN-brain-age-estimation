@@ -98,12 +98,11 @@ def test(valid_loader, model, criterion, device
             target = target.type(torch.FloatTensor).to(device)
 
             # ======= compute output and loss ======= #
-            if opt.model == 'DenseNet' :
+            if opt.model == 'ScaleDense' :
                 output = model(input,male)
 
             else:
                 output = model(input)
-            print(output)
             out.append(output.cpu().numpy())
             targ.append(target.cpu().numpy())
             ID.append(ids)
@@ -162,7 +161,6 @@ def test(valid_loader, model, criterion, device
                     ,target=target_numpy
                     ,prediction=predicted_numpy
                     ,ID=ID_numpy)
-
 
         # ======= Draw scatter plot of predicted age against true age ======= #
         if figure is True:
