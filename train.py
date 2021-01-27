@@ -5,7 +5,7 @@ import numpy as np
 import torch.nn as nn
 from config import opt
 from prediction import test
-from network import DenseNet
+from network import ScaleDense
 from loss import rank_difference
 from load_data import IMG_Folder
 from sklearn.metrics import mean_absolute_error
@@ -64,7 +64,7 @@ def main(res):
 
     # ===========  build and set model  =========== #  
     if opt.model == 'DenseNet':
-        model = DenseNet.dense_net(8, 5, opt.use_gender)
+        model = ScaleDense.ScaleDense(8, 5, opt.use_gender)
     else:
         print('Wrong model choose')
 
