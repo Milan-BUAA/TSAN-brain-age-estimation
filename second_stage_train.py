@@ -264,24 +264,25 @@ def train(train_loader, model, first_stage_model,criterion1, criterion2, optimiz
 
         # =========== compute output and loss =========== #
         model.zero_grad()
-        if opt.model == 'DenseNet':
-            out = model(input,male)
+        if opt.model == 'ScaleDense':
+            predicted_residual_age = model(input, male, dis_age)
         else:
-            out = model(input)
+            predicted_residual_age = model(input, dis_age)
 
-        predicted_residual_age = model(input, male, dis_age)
         output_age = predicted_residual_age + dis_age
 
         # =========== compute loss =========== #
+        loss_residual_age = criterion1(predicted_residual_age, residual_age)
+
         loss1 = criterion1(output_age, target)
         if opt.lbd > 0:
-            loss2 = criterion2(out, target)
+            loss2 = criterion2(output_age, target)
         else:
             loss2 = 0
-        loss = loss1 + opt.lbd * loss2
+        loss = loss_residual_age + loss1 + opt.lbd * loss2
 
         mae = metric(
-                out.detach(), target.detach().cpu())
+                output_age.detach(), target.detach().cpu())
         losses.update(loss, img.size(0))
         LOSS1.update(loss1,img.size(0))
         LOSS2.update(loss2,img.size(0))
@@ -309,7 +310,7 @@ def train(train_loader, model, first_stage_model,criterion1, criterion2, optimiz
 
     return losses.avg,MAE.avg
 
-def validate(valid_loader, model, criterion1,criterion2, device):
+def validate(valid_loader, model, first_stage_model,criterion1,criterion2, device):
     '''   
     For validation process\\
     train_loader: data loader which is defined before \\
@@ -336,19 +337,30 @@ def validate(valid_loader, model, criterion1,criterion2, device):
             target = torch.from_numpy(np.expand_dims(target,axis=1))
             target = target.type(torch.FloatTensor).to(device)
 
+            first_stage_predict = first_stage_model(input,male).detach()
+            dis_age = discriminate_age(first_stage_predict,range=opt.dis_range).to(device)
+        
+            # compute residual age label
+            residual_age = target - dis_age
+
+
             # =========== compute output and loss =========== #
-            if opt.model == 'DenseNet':
-                out = model(input,male)
+            if opt.model == 'ScaleDense':
+                predicted_residual_age = model(input, male, dis_age)
             else:
-                out = model(input)
+                predicted_residual_age = model(input, dis_age)
+
+            output_age = predicted_residual_age + dis_age
+
             # =========== compute loss =========== #
-            loss1 = criterion1(out, target)
+            loss_residual_age = criterion1(predicted_residual_age, residual_age)
+            loss1 = criterion1(output_age, target)
             if opt.lbd > 0:
-                loss2 = criterion2(out, target)
+                loss2 = criterion2(output_age, target)
             else:
                 loss2 = 0
-            loss = loss1 + opt.lbd * loss2
-            mae = metric(out.detach(), target.detach().cpu())
+            loss = loss_residual_age + loss1 + opt.lbd * loss2
+            mae = metric(output_age.detach(), target.detach().cpu())
 
             # =========== measure accuracy and record loss =========== #
             losses.update(loss, input.size(0))
