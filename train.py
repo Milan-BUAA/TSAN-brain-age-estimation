@@ -1,14 +1,14 @@
 import os,torch
-import sdatetime, tensorboardX
+import datetime, 
+import tensorboardX
 import numpy as np
 import torch.nn as nn
-import torch.distributed as dist
 from config import opt
 from prediction import test
-from sklearn.metrics import mean_absolute_error
 from network import DenseNet
-from loss import AGE_difference,SpearmanLoss,rank_difference
+from loss import rank_difference
 from load_data import IMG_Folder
+from sklearn.metrics import mean_absolute_error
 
 
 torch.manual_seed(0)
@@ -63,40 +63,23 @@ def main(res):
 
 
     # ===========  build and set model  =========== #  
-    if opt.model == 'CNN':
-        model = CNN.CNN(8,5)
-    elif opt.model == 'resnet':
-        model = ResNet.resnet18()
-    elif opt.model == 'DenseNet':
+    if opt.model == 'DenseNet':
         model = DenseNet.dense_net(8, 5, opt.use_gender)
-    elif opt.model == 'VGG':
-        model = vgg16.VGG16()
-    elif opt.model == 'attention':
-        model = residual_attention_network.ResidualAttentionModel_56()
-    elif opt.model == 'sfcn':
-        model = sfcn.SFCN()
+    else:
+        print('Wrong model choose')
 
 
     model.apply(weights_init)
-    # wandb.watch(model)
     model = nn.DataParallel(model).to(device)
     model_test = model
 
     # =========== define the loss function =========== #
-    '''
-    MAE loss 为均值绝对误差作为 loss function
-    MSE loss 为均值平方误差作为 loss function
-    Ranking loss 是基于斯皮尔曼秩序相关系数的量化秩序损失
-    ad loss  是量化一对样本的真实年龄差与预测年龄差的损失函数
-    '''
     loss_func_dict = {
                       'mae': nn.L1Loss().to(device)
-                     ,'ranking': SpearmanLoss().to(device)
                      ,'mse': nn.MSELoss().to(device)
-                     ,'ad':AGE_difference().to(device)
-                     ,'both':rank_difference( beta=opt.beta
-                                             ,num_pair=opt.num_pair
-                                            ).to(device)
+                     ,'ranking':rank_difference( beta=opt.beta
+                                                ,num_pair=opt.num_pair
+                                               ).to(device)
                     }
         
     criterion1 = loss_func_dict[opt.loss]
@@ -154,14 +137,6 @@ def main(res):
         sum_writer.add_scalar('valid/loss', valid_loss, epoch)
         sum_writer.add_scalar('valid/mae', valid_mae, epoch)
 
-        # =========== write on the wandb ============== #
-
-        # wandb.log({'train_loss':train_loss
-        #           ,'train_mae':train_mae
-        #           ,'valid_loss':valid_loss
-        #           ,'valid_mae':valid_mae
-        #           })
-
         # ===========  record the  best metric and save checkpoint ===========  #
         valid_metric = valid_mae
         is_best = False
@@ -172,7 +147,6 @@ def main(res):
             saved_metrics.append(valid_metric)
             saved_epos.append(epoch)
             print('=======>   Best at epoch %d, valid MAE %f\n' % (epoch, best_metric))
-            # torch.save(model.state_dict(),os.path.join(wandb.run.dir,'model.py'))
 
 
         save_checkpoint({
@@ -281,13 +255,9 @@ def train(train_loader, model, criterion1, criterion2, optimizer, device, epoch)
         input = img.to(device)
         target = target.type(torch.FloatTensor).to(device)
 
-        # ===========  mix up =========== #
-        if opt.mix_up > 0:
-            input, target, target_, lamb = mixup(opt.mix_up,input,target)
-
         # =========== compute output and loss =========== #
         model.zero_grad()
-        if opt.model == 'DenseNet' or opt.model == 'CNN':
+        if opt.model == 'DenseNet':
             out = model(input,male)
 
         else:
@@ -358,7 +328,7 @@ def validate(valid_loader, model, criterion1,criterion2, device):
             target = target.type(torch.FloatTensor).to(device)
 
             # =========== compute output and loss =========== #
-            if opt.model == 'DenseNet' or opt.model == 'CNN':
+            if opt.model == 'DenseNet':
                 out = model(input,male)
             else:
                 out = model(input)
@@ -476,14 +446,7 @@ if __name__ == "__main__":
     if not os.path.exists(opt.output_dir):
         os.makedirs(opt.output_dir)
         
-    # =========== save train config ===========#
-    os.system('cp bash_train.sh {}'.format(opt.output_dir))
-    os.system('cp ./network/* {}'.format(opt.output_dir))
-    # os.system('cp ./network/CNN.py {}'.format(opt.output_dir))
-    os.system('cp train.py {}'.format(opt.output_dir))
-    os.system('cp loss.py {}'.format(opt.output_dir))
-    os.system('cp prediction.py {}'.format(opt.output_dir))
-    os.system('cp load_data.py {}'.format(opt.output_dir))
+    # =========== save train config =========== #
 
     print('=> training from scratch.\n')
     os.system('echo "train {}" >> {}'.format(datetime.datetime.now(), res))
