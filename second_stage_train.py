@@ -1,11 +1,11 @@
 import os,torch
-import datetime, 
+import datetime
 import tensorboardX
 import numpy as np
 import torch.nn as nn
 from config import opt
 from prediction import test
-from network import ScaleDense
+from network import ScaleDense,second_stage_ScaleDense
 from loss import rank_difference
 from load_data import IMG_Folder
 from sklearn.metrics import mean_absolute_error
@@ -25,7 +25,6 @@ print("=> weight decay     : {}".format(opt.weight_decay))
 print("=> aux loss         : {}x{}".format(opt.aux_loss, opt.beta))
 print("=> number of pair:  : {}".format(opt.num_pair))
 
-# wandb.init(config=opt,project='brain-age')
 
 
 def main(res):
@@ -64,13 +63,18 @@ def main(res):
 
     # ===========  build and set model  =========== #  
     if opt.model == 'ScaleDense':
-        model = ScaleDense.ScaleDense(8, 5, opt.use_gender)
+        model = second_stage_ScaleDense.ScaleDense(8, 5, opt.use_gender)
     else:
         print('Wrong model choose')
 
     model.apply(weights_init)
     model = nn.DataParallel(model).to(device)
     model_test = model
+
+    model_first_stage = ScaleDense.ScaleDense(8,8,5)
+    model_first_stage = nn.DataParallel(model_first_stage).to(device)
+    model_first_stage.load_state_dict(torch.load(opt.first_stage_net)['state_dict'])
+    model_first_stage.eval()
 
     # =========== define the loss function =========== #
     loss_func_dict = {
@@ -95,10 +99,8 @@ def main(res):
                                                            ,patience=3
                                                            ,factor=0.1
                                                            )
-    early_stopping = EarlyStopping(patience=5, verbose=True)
+    early_stopping = EarlyStopping(patience=10, verbose=True)
     
-
-
     # =========== define tensorboardX and show traing start signal =========== #
     saved_metrics, saved_epos = [], []
     num_epochs = int(opt.epochs)
@@ -112,6 +114,7 @@ def main(res):
         # ===========  train for one epoch   =========== #
         train_loss, train_mae = train(  train_loader=train_loader
                                       , model=model
+                                      , first_stage_model=model_first_stage
                                       , criterion1=criterion1
                                       , criterion2=criterion2
                                       , optimizer=optimizer
@@ -120,7 +123,8 @@ def main(res):
 
         # ===========  evaluate on validation set ===========  #
         valid_loss, valid_mae = validate( valid_loader=valid_loader
-                                        , model=model 
+                                        , model=model
+                                        , first_stage_model=model_first_stage
                                         , criterion1=criterion1
                                         , criterion2=criterion2
                                         , device=device)        
@@ -146,8 +150,6 @@ def main(res):
             saved_metrics.append(valid_metric)
             saved_epos.append(epoch)
             print('=======>   Best at epoch %d, valid MAE %f\n' % (epoch, best_metric))
-
-
         save_checkpoint({
                          'epoch': epoch
                         ,'arch': opt.model
@@ -230,7 +232,7 @@ def main(res):
     os.system('echo "the last model TEST MAE mtc:{:.5f}" >> {}'.format(test_MAE_last.avg, res))
     os.system('echo "the last model TEST rr mtc:{:.5f}" >> {}'.format(test_CC_last[0][1], res))
 
-def train(train_loader, model, criterion1, criterion2, optimizer, device, epoch):
+def train(train_loader, model, first_stage_model,criterion1, criterion2, optimizer, device, epoch):
     '''   
     For training process\\
     train_loader: data loader which is defined before \\
@@ -254,16 +256,24 @@ def train(train_loader, model, criterion1, criterion2, optimizer, device, epoch)
         input = img.to(device)
         target = target.type(torch.FloatTensor).to(device)
 
+        first_stage_predict = first_stage_model(input,male).detach()
+        dis_age = discriminate_age(first_stage_predict,range=opt.dis_range).to(device)
+        
+        # compute residual age label
+        residual_age = target - dis_age
+
         # =========== compute output and loss =========== #
         model.zero_grad()
         if opt.model == 'DenseNet':
             out = model(input,male)
-
         else:
             out = model(input)
 
+        predicted_residual_age = model(input, male, dis_age)
+        output_age = predicted_residual_age + dis_age
+
         # =========== compute loss =========== #
-        loss1 = criterion1(out, target)
+        loss1 = criterion1(output_age, target)
         if opt.lbd > 0:
             loss2 = criterion2(out, target)
         else:
