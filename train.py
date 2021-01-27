@@ -446,8 +446,6 @@ if __name__ == "__main__":
     if not os.path.exists(opt.output_dir):
         os.makedirs(opt.output_dir)
         
-    # =========== save train config =========== #
-
     print('=> training from scratch.\n')
     os.system('echo "train {}" >> {}'.format(datetime.datetime.now(), res))
 
