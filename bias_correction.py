@@ -1,23 +1,9 @@
 import os
-import shutil
-import sklearn
+
 import numpy as np
-import seaborn as sns
-import matplotlib.pyplot as plt
 from sklearn.metrics import mean_absolute_error
 from sklearn.linear_model import LinearRegression
 from scipy.stats import pearsonr,spearmanr
-
-'''
-文章显示，大脑年龄差与其真实年龄成一定的负相关，自己实验也证实了这一点。
-所以需要对预测出的大脑年龄做 bias correction 
-查阅文献可知，当前的 correction方法主要分为线性与非线性两种
-本段代码采用较为简单的线性回归模型进行矫正。
-原理如下： x = ay + b
-          x' = (x-b)/a
-校正后的大脑年龄差与真实年龄的皮尔逊相关系数和斯皮尔曼秩序相关系数的绝对值都有明显的下降
-但 预测年龄和真实年龄的均值绝对误差略有上升，大约为0.1-0.2岁左右
-'''
 
 # ==========-   load  prediction and target  ========== #
 root = './TMI_result/model5/'
@@ -30,24 +16,6 @@ print('number of sample: ',predicted_age_difference.shape[0])
 prediction = np.expand_dims(prediction,axis=1)
 target = np.expand_dims(target,axis=1)
 
-# ==========                                ==========    #
-             # bias correction methods 1 #
-#===========                                ==========    #
-
-# ==========   build linear regression model   ========== #
-# reg = LinearRegression()
-# reg.fit(target,prediction)
-# print("The linear model is: Y = {:.5} + {:.5}X".format(reg.intercept_[0], reg.coef_[0][0]))
-
-# ==========   bias correction   ========== #
-# correct_prediction = (prediction - reg.intercept_[0])/reg.coef_[0][0]
-# correct_gap = correct_prediction - target
-# correct_gap = np.squeeze(correct_gap,axis=1)
-
-# ==========                                ==========    #
-             # bias correction methods 2 #
-#===========                                ==========    #
-# ==========   build linear regression model   ========== #
 reg = LinearRegression()
 reg.fit(target,prediction-target)
 print("The linear model is: Y = {:.5} + {:.5}X".format(reg.intercept_[0], reg.coef_[0][0]))
