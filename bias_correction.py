@@ -29,7 +29,7 @@ correct_gap = np.squeeze(correct_gap,axis=1)
 target = np.squeeze(target,axis=1)
 prediction = np.squeeze(prediction,axis=1)
 correct_prediction = np.squeeze(correct_prediction,axis=1)
-# np.save(root+'correct_prediction.npy',correct_prediction)
+np.save(root+'correct_prediction.npy',correct_prediction)
 
 
 # ==========  compute the pearson's corrlation coefication between age gap and true age   ========== #

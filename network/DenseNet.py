@@ -47,30 +47,27 @@ class dense_layer(nn.Module):
     def __init__(self,inchannels,outchannels):
         super(dense_layer,self).__init__()
         self.block = nn.Sequential(
-            # nn.Conv3d(inchannels,outchannels,3,1,bias=False,padding=1),
             AC_layer(inchannels,outchannels),
             nn.BatchNorm3d(outchannels),
             nn.ELU(),
-            # nn.Conv3d(outchannels,outchannels,3,1,bias=False,padding=1),
             AC_layer(outchannels,outchannels),
             nn.BatchNorm3d(outchannels),
             nn.ELU(),
-            # SE_block(outchannels),
+            SE_block(outchannels),
             nn.MaxPool3d(2,2),
         )
 
     def forward(self,x):
         new_features = self.block(x)
         x = F.max_pool3d(x,2)
-        # x = F.avg_pool3d(x,2)
         x = torch.cat([x, new_features], 1)
 
         return x
 
 class dense_net(nn.Module):
     '''
-    建立 scale dense \\
-    参数包括：\\
+    Develop Scale dense \\
+    parameter：\\
         nb_filter: initial convolutional layer filter\\
         nb_block：number of Dense block \\
         use_gender: if use gender input
@@ -82,36 +79,28 @@ class dense_net(nn.Module):
         self.use_gender = use_gender
         self.pre = nn.Sequential(
             nn.Conv3d(1,nb_filter,kernel_size=7,stride=1,padding=1,dilation=2),
-            # nn.ReLU(),
             nn.ELU(),
             )
         self.block, last_channels = self._make_block(nb_filter,nb_block)
         self.gap = nn.AdaptiveAvgPool3d((1,1,1))
         self.deep_fc = nn.Sequential(
-            nn.Linear(last_channels,512,bias=True),
-            # nn.Dropout(0.3),
-            nn.Linear(512,128,bias=True),
-            nn.Linear(128,32,bias=True),
+            nn.Linear(last_channels,32,bias=True),
             nn.ELU(),
             )
 
         self.male_fc = nn.Sequential(
             nn.Linear(2,16,bias=True),
-            nn.Linear(16,32,bias=True),
+            nn.Linear(16,8,bias=True),
             nn.ELU(),
             )
         self.end_fc_with_gender = nn.Sequential(
-            nn.Linear(64,16),
-            nn.Linear(16,8),
-            nn.Linear(8,1),
+            nn.Linear(40,16),
+            nn.Linear(16,1),
             nn.ReLU()
             )
         self.end_fc_without_gender = nn.Sequential(
             nn.Linear(32,16),
-            nn.ELU(),
-            nn.Linear(16,8),
-            nn.ELU(),
-            nn.Linear(8,1),
+            nn.Linear(16,1),
             nn.ReLU()
             )
 
@@ -137,17 +126,16 @@ class dense_net(nn.Module):
             x = torch.cat([x,male.type_as(x)],1)
             x = self.end_fc_with_gender(x)
         else:
-            x = self.end_fc_without_gender
+            x = self.end_fc_without_gender(x)
         return x
 
-# device = torch.device("cuda" if torch.cuda.is_available() else "cpu") 
-# model = dense_net(8,5).to(device)
-# # print(model)
+if __name__ == "__main__":
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu") 
+    model = dense_net(8,5,True).to(device)
 
-# iuput = torch.autograd.Variable(torch.rand(5,1,91,109,91)).to(device)
-# male_input = torch.autograd.Variable(torch.rand(5,2)).to(device)
-# out = model(iuput,male_input)
-# # print(out)
-# # print(out.size())
-# print(model)
-# summary(model,((1,91,109,91),(1,1)))
+    iuput = torch.autograd.Variable(torch.rand(6,1,91,109,91)).to(device)
+    male_input = torch.autograd.Variable(torch.rand(6,2)).to(device)
+    out = model(iuput,male_input)
+    print(out)
+    print(out.size())
+
