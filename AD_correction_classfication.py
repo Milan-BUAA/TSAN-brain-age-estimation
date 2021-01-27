@@ -49,16 +49,10 @@ def load_cla_data(cla_data_root,model_name,subgroup):
     return predicton, target, brain_age_difference
 
 def classfication(NC_PAD, MCI_PAD, AD_PAD, cli_type=1):
-    MCI_PAD = np.delete(MCI_PAD,[14, 146, 189, 323, 337, 348, 372])
-    MCI_noise = np.random.normal(loc=2.5, scale=1.2,size=MCI_PAD.shape)
-    MCI_PAD = np.expand_dims(MCI_PAD + MCI_noise,axis=1)
-
-    AD_PAD = np.delete(AD_PAD,[61,  98, 118, 151, 171])
-    AD_noise = np.random.normal(loc=3.0, scale=1.0,size=AD_PAD.shape)
-    AD_PAD = np.expand_dims(AD_PAD + AD_noise,axis=1)
-
-    NC_noise = np.random.normal(loc=0.0, scale=1,size=NC_PAD.shape)
-    NC_PAD = np.expand_dims(NC_PAD + NC_noise,axis=1)
+    
+    MCI_PAD = np.expand_dims(MCI_PAD,axis=1)
+    AD_PAD = np.expand_dims(AD_PAD,axis=1)
+    NC_PAD = np.expand_dims(NC_PAD,axis=1)
     
     NC_PAD = np.concatenate([NC_PAD,np.zeros_like(NC_PAD)],axis=1)
     if cli_type == 1:
