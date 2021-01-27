@@ -4,16 +4,9 @@ import os,shutil,torch
 import matplotlib.pyplot as plt
 from config import opt
 from load_data import IMG_Folder
-from network import CNN,ResNet,vgg16,DenseNet,residual_attention_network
+from network import ScaleDense
 from scipy.stats import pearsonr,spearmanr
-from loss import AGE_difference,SpearmanLoss,rank_difference
-from sklearn.metrics import mean_absolute_error,mean_squared_error
-
-'''
-在训练结束后，对训练好的模型进行测试。
-输出结果包括MAE，误差的标准差，pearson's correlation coefication,spearman's ranking correlation
-并绘制出预测年龄与真实年龄的散点图及拟合线。
-'''
+from sklearn.metrics import mean_absolute_error
 
 class AverageMeter(object):
     """Computes and stores the average and current value"""
@@ -39,24 +32,16 @@ def metric(output, target):
     mae = mean_absolute_error(target,pred)
     return mae
 
-
 def main():
-
     # ======== define data loader and CUDA device ======== #
     test_data = IMG_Folder(opt.excel_path, opt.test_folder)
     device = torch.device('cuda:0,1,2,3' if torch.cuda.is_available() else 'cpu')
 
     # ========  build and set model  ======== #  
-    if opt.model == 'CNN':
-        model = CNN.CNN(8,5)
-    elif opt.model == 'resnet':
-        model = ResNet.resnet18()
-    elif opt.model == 'DenseNet':
-        model = DenseNet.dense_net(8, 5, opt.use_gender)
-    elif opt.model == 'VGG':
-        model = vgg16.VGG16()
-    elif opt.model == 'attention':
-        model = residual_attention_network.ResidualAttentionModel_56()
+    if opt.model == 'DenseNet':
+        model = ScaleDense.ScaleDense(8, 5, opt.use_gender)
+    else:
+        print('Wrong model choose')
 
     model = nn.DataParallel(model).to(device)
     criterion = nn.MSELoss().to(device)
@@ -113,7 +98,7 @@ def test(valid_loader, model, criterion, device
             target = target.type(torch.FloatTensor).to(device)
 
             # ======= compute output and loss ======= #
-            if opt.model == 'DenseNet' or opt.model == 'CNN':
+            if opt.model == 'DenseNet' :
                 output = model(input,male)
 
             else:
