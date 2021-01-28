@@ -23,8 +23,6 @@ print("=> batch size  : {}".format(opt.batch_size))
 print("=> learning rate    : {}".format(opt.lr))
 print("=> weight decay     : {}".format(opt.weight_decay))
 print("=> aux loss         : {}x{}".format(opt.aux_loss, opt.beta))
-print("=> number of pair:  : {}".format(opt.num_pair))
-
 
 def main(res):
     best_metric = 100
@@ -74,9 +72,7 @@ def main(res):
     loss_func_dict = {
                       'mae': nn.L1Loss().to(device)
                      ,'mse': nn.MSELoss().to(device)
-                     ,'ranking':rank_difference( beta=opt.beta
-                                                ,num_pair=opt.num_pair
-                                               ).to(device)
+                     ,'ranking':rank_difference(beta=opt.beta).to(device)
                     }
         
     criterion1 = loss_func_dict[opt.loss]
