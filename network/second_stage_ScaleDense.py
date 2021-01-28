@@ -69,7 +69,7 @@ class dense_layer(nn.Module):
         x = torch.cat([x, new_features], 1)
         return x
 
-class dense_net(nn.Module):
+class second_stage_scaledense(nn.Module):
     def __init__(self,nb_filter,grow_rate,nb_block):
         super(dense_net,self).__init__()
         self.nb_block = nb_block

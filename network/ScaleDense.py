@@ -74,7 +74,7 @@ class ScaleDense(nn.Module):
 
     '''
     def __init__(self,nb_filter, nb_block, use_gender=True):
-        super(dense_net,self).__init__()
+        super(ScaleDense),self).__init__()
         self.nb_block = nb_block
         self.use_gender = use_gender
         self.pre = nn.Sequential(
