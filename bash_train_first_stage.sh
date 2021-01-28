@@ -3,14 +3,12 @@
 paths=/home/liuziyang/workspace/brain_age_prediction
 
 dataset=combine/18
-model=$1
-loss=$2
-batch_size=$3
-lbd=$4
-beta=$5
-num_pair=$6
-extra=$7
-save_path=./model/combine/${model}_${loss}_lbd_${lbd}_beta_${beta}_np_${num_pair}_${extra}/
+model=ScaleDense
+loss=mse
+batch_size=16
+lbd=10
+beta=0.1
+save_path=./model/combine/${model}_${loss}_lbd_${lbd}_beta_${beta}/
 label=${paths}/lables/combine.xls
 
 train_data=${paths}/data/NC/${dataset}/train
@@ -27,10 +25,9 @@ CUDA_VISIBLE_DEVICES=0     python first_stage_train.py       \
 --mix_up                   0.0                 \
 --weight_decay             2e-5                \
 --loss                     $loss               \
---aux_loss                 both                \
+--aux_loss                 ranking             \
 --lbd                      $lbd                \
 --beta                     $beta               \
---num_pair                 $num_pair           \
 --train_folder             ${train_data}       \
 --valid_folder             ${valid_data}       \
 --test_folder              ${test_data}        \
