@@ -1,12 +1,13 @@
+import os,torch
 import numpy as np
 import torch.nn as nn
-import os,shutil,torch
 import matplotlib.pyplot as plt
 from config import opt
 from load_data import IMG_Folder
-from network import ScaleDense
+from network import ScaleDense,second_stage_ScaleDense
 from scipy.stats import pearsonr,spearmanr
 from sklearn.metrics import mean_absolute_error
+from discriminate_age import discriminate_age
 
 class AverageMeter(object):
     """Computes and stores the average and current value"""
@@ -38,10 +39,15 @@ def main():
     device = torch.device('cuda:0,1,2,3' if torch.cuda.is_available() else 'cpu')
 
     # ========  build and set model  ======== #  
-    if opt.model == 'DenseNet':
-        model = ScaleDense.ScaleDense(8, 5, opt.use_gender)
+    if opt.model == 'ScaleDense':
+        model = second_stage_ScaleDense.ScaleDense(8, 5, opt.use_gender)
     else:
         print('Wrong model choose')
+
+    model_first_stage = ScaleDense.ScaleDense(8,5, opt.use_gender)
+    model_first_stage = nn.DataParallel(model_first_stage).to(device)
+    model_first_stage.load_state_dict(torch.load(opt.first_stage_net)['state_dict'])
+    model_first_stage.eval()
 
     model = nn.DataParallel(model).to(device)
     criterion = nn.MSELoss().to(device)
@@ -68,9 +74,11 @@ def main():
         , figure=False
         , figure_name=opt.plot_name)
 
-def test(valid_loader, model, criterion, device
-        , save_npy=False,npy_name='test_result.npz'
-        , figure=False, figure_name='True_age_and_predicted_age.png'):
+def test(valid_loader, model, first_stage_model,criterion
+        , device, save_npy=False,npy_name='test_result.npz'
+        , figure=False
+        , figure_name='True_age_and_predicted_age.png'):
+
     losses = AverageMeter()
     MAE = AverageMeter()
 
@@ -90,24 +98,31 @@ def test(valid_loader, model, criterion, device
             input = input.to(device).type(torch.FloatTensor)
 
             # ======= convert male lable to one hot type ======= #
-            male = torch.unsqueeze(male,1)
-            male = torch.zeros(male.shape[0],2).scatter_(1,male,1)
-            male = male.type(torch.FloatTensor).to(device)
+            if opt.use_gender:
+                male = torch.unsqueeze(male,1)
+                male = torch.zeros(male.shape[0],2).scatter_(1,male,1)
+                male = male.to(device).type(torch.FloatTensor)
 
             target = torch.from_numpy(np.expand_dims(target,axis=1))
             target = target.type(torch.FloatTensor).to(device)
 
+            first_stage_predict = first_stage_model(input,male).detach()
+            dis_age = discriminate_age(first_stage_predict,range=opt.dis_range).to(device)
+        
             # ======= compute output and loss ======= #
             if opt.model == 'ScaleDense' :
-                output = model(input,male)
-
+                predicted_residual_age = model(input,male,dis_age)
             else:
-                output = model(input)
-            out.append(output.cpu().numpy())
+                predicted_residual_age = model(input,dis_age)
+
+            output_age = predicted_residual_age + dis_age
+
+            loss = criterion(output_age, target)
+            mae = metric(output_age.detach(), target.detach().cpu())
+            
+            out.append(output_age.cpu().numpy())
             targ.append(target.cpu().numpy())
             ID.append(ids)
-            loss = criterion(output, target)
-            mae = metric(output.detach(), target.detach().cpu())
 
             # ======= measure accuracy and record loss ======= #
             losses.update(loss, input.size(0))

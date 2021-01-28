@@ -4,6 +4,7 @@ import tensorboardX
 import numpy as np
 import torch.nn as nn
 from config import opt
+from discriminate_age import discriminate_age
 from prediction_first_stage import test
 from network import ScaleDense,second_stage_ScaleDense
 from loss import rank_difference
@@ -70,7 +71,7 @@ def main(res):
     model = nn.DataParallel(model).to(device)
     model_test = model
 
-    model_first_stage = ScaleDense.ScaleDense(8,8,5)
+    model_first_stage = ScaleDense.ScaleDense(8,5,, opt.use_gender)
     model_first_stage = nn.DataParallel(model_first_stage).to(device)
     model_first_stage.load_state_dict(torch.load(opt.first_stage_net)['state_dict'])
     model_first_stage.eval()
@@ -255,10 +256,7 @@ def train(train_loader, model, first_stage_model,criterion1, criterion2, optimiz
 
         first_stage_predict = first_stage_model(input,male).detach()
         dis_age = discriminate_age(first_stage_predict,range=opt.dis_range).to(device)
-        
-        # compute residual age label
-        residual_age = target - dis_age
-
+     
         # =========== compute output and loss =========== #
         model.zero_grad()
         if opt.model == 'ScaleDense':
@@ -269,14 +267,12 @@ def train(train_loader, model, first_stage_model,criterion1, criterion2, optimiz
         output_age = predicted_residual_age + dis_age
 
         # =========== compute loss =========== #
-        loss_residual_age = criterion1(predicted_residual_age, residual_age)
-
         loss1 = criterion1(output_age, target)
         if opt.lbd > 0:
             loss2 = criterion2(output_age, target)
         else:
             loss2 = 0
-        loss = loss_residual_age + loss1 + opt.lbd * loss2
+        loss = loss1 + opt.lbd * loss2
 
         mae = metric(
                 output_age.detach(), target.detach().cpu())
@@ -337,10 +333,6 @@ def validate(valid_loader, model, first_stage_model,criterion1,criterion2, devic
             first_stage_predict = first_stage_model(input,male).detach()
             dis_age = discriminate_age(first_stage_predict,range=opt.dis_range).to(device)
         
-            # compute residual age label
-            residual_age = target - dis_age
-
-
             # =========== compute output and loss =========== #
             if opt.model == 'ScaleDense':
                 predicted_residual_age = model(input, male, dis_age)
@@ -350,13 +342,12 @@ def validate(valid_loader, model, first_stage_model,criterion1,criterion2, devic
             output_age = predicted_residual_age + dis_age
 
             # =========== compute loss =========== #
-            loss_residual_age = criterion1(predicted_residual_age, residual_age)
             loss1 = criterion1(output_age, target)
             if opt.lbd > 0:
                 loss2 = criterion2(output_age, target)
             else:
                 loss2 = 0
-            loss = loss_residual_age + loss1 + opt.lbd * loss2
+            loss = loss1 + opt.lbd * loss2
             mae = metric(output_age.detach(), target.detach().cpu())
 
             # =========== measure accuracy and record loss =========== #
@@ -401,22 +392,6 @@ def weights_init(w):
             nn.init.constant_(w.weight, 1)
         if hasattr(w, 'bias') and w.bias is not None:
             nn.init.constant_(w.bias, 0)
-
-def discriminate_age(age, range=5):
-    dis = []
-    for i in age:
-        value = i // range
-        x = i % range
-        if x < range/2:
-            discri_age = value * range
-        else:
-            discri_age = (value+1)*range
-        dis.append(discri_age)
-        dis_age = np.asarray(dis,dtype='float32')
-        dis_age = np.expand_dims(dis_age,axis=1)
-        dis_age = torch.from_numpy(dis_age)
-
-    return dis_age
 
 class AverageMeter(object):
     """Computes and stores the average and current value"""
