@@ -71,7 +71,8 @@ class second_stage_scaledense(nn.Module):
         self.nb_block = nb_block
         self.use_gender = use_gender
         self.pre = nn.Sequential(
-            nn.Conv3d(1,nb_filter,7,1,padding=1),
+            nn.Conv3d(1,nb_filter,kernel_size=7,stride=1
+                     ,padding=1,dilation=2),
             nn.ELU(),
         )
         self.block, last_channels = self._make_block(nb_filter,nb_block)
@@ -105,7 +106,6 @@ class second_stage_scaledense(nn.Module):
             nn.ReLU()
             )
          
-
     def _make_block(self,nb_filter,nb_block):
         blocks = []
         inchannels = nb_filter
