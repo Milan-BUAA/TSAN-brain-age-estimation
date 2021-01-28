@@ -16,7 +16,7 @@ valid_data=${paths}/data/NC/${dataset}/val
 test_data=${paths}/data/NC/${dataset}/test
 
 # ------ train and set the parameter
-CUDA_VISIBLE_DEVICES=0     python first_stage_train.py       \
+CUDA_VISIBLE_DEVICES=0     python train_first_stage.py       \
 --batch_size               $batch_size         \
 --epochs                   150                 \
 --lr                       5e-4                \
