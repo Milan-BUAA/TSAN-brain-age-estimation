@@ -30,16 +30,15 @@ class rank_difference(torch.nn.Module):
     the total number of pair is batch size * num_pair  
     '''
 
-    def __init__(self,beta=1,num_pair=40):
+    def __init__(self,beta=1):
         super(rank_difference,self).__init__()
         self.criterion_mse = torch.nn.MSELoss()
         self.criterionl1 = torch.nn.L1Loss()
         self.beta = beta
-        self.num_pair = num_pair
 
     def forward(self, mem_pred, mem_gt):
-        a = np.random.randint(0,mem_pred.size(0),mem_pred.size(0)*self.num_pair)
-        b = np.random.randint(0,mem_gt.size(0),mem_gt.size(0)*self.num_pair)
+        a = np.random.randint(0,mem_pred.size(0),mem_pred.size(0))
+        b = np.random.randint(0,mem_gt.size(0),mem_gt.size(0))
 
         rank_gt = get_rank(mem_gt)
         rank_pred = get_rank(mem_pred)

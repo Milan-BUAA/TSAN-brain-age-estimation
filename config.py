@@ -33,7 +33,6 @@ parser.add_argument('--loss',       default='mse'   ,type=str)
 parser.add_argument('--lbd',        default=1       ,type=float)
 parser.add_argument('--beta',       default=0.5     ,type=float)
 parser.add_argument('--aux_loss',   default='ranking'  ,type=str)
-parser.add_argument('--num_pair',   default=40      ,type=int)
 
 # =========== ELSE ================ #
 parser.add_argument('--dis_range',        default=5 ,type=int)
