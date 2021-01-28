@@ -4,7 +4,7 @@ import tensorboardX
 import numpy as np
 import torch.nn as nn
 from config import opt
-from prediction import test
+from prediction_first_stage import test
 from network import ScaleDense,second_stage_ScaleDense
 from loss import rank_difference
 from load_data import IMG_Folder
