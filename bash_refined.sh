@@ -1,19 +1,23 @@
 #! /bin/bash
-
-paths=/home/lzy/Data/age
-age_range=18
-dataset=combine
-model=DenseNet
+paths=/home/liuziyang/workspace/brain_age_prediction
+dataset=combine/18
 dis_range=5
+model=$1
+loss=$2
+batch_size=$3
+lbd=$4
+beta=$5
+num_pair=$6
+extra=$7
 save_path=./model/combine/refined_dis_${dis_range}_test_check_${model}_${age_range}/
-label=${paths}/lables/${age_range}_${dataset}.xls
+label=${paths}/lables/combine.xls
 
-train_data=${paths}/data/NC/${dataset}/${age_range}/train
-valid_data=${paths}/data/NC/${dataset}/${age_range}/val
-test_data=${paths}/data/NC/${dataset}/${age_range}/test
+train_data=${paths}/data/NC/${dataset}/train
+valid_data=${paths}/data/NC/${dataset}/val
+test_data=${paths}/data/NC/${dataset}/test
 
 # ------ train and set the parameter
-CUDA_VISIBLE_DEVICES=0,1,2,3 python  refined_train.py                                \
+CUDA_VISIBLE_DEVICES=0 python  second_stage_train.py  \
 --batch_size 32                                 \
 --epochs 200                                    \
 --lr 1e-5                                       \
@@ -27,3 +31,4 @@ CUDA_VISIBLE_DEVICES=0,1,2,3 python  refined_train.py                           
 --output_dir ${save_path}                       \
 --loss MAE                                      \
 --lbd 10                                        \
+--dis_range ${dis_range}                        \
