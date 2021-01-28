@@ -74,11 +74,12 @@ class ScaleDense(nn.Module):
 
     '''
     def __init__(self,nb_filter, nb_block, use_gender=True):
-        super(ScaleDense),self).__init__()
+        super(ScaleDense,self).__init__()
         self.nb_block = nb_block
         self.use_gender = use_gender
         self.pre = nn.Sequential(
-            nn.Conv3d(1,nb_filter,kernel_size=7,stride=1,padding=1,dilation=2),
+            nn.Conv3d(1,nb_filter,kernel_size=7,stride=1
+                     ,padding=1,dilation=2),
             nn.ELU(),
             )
         self.block, last_channels = self._make_block(nb_filter,nb_block)
