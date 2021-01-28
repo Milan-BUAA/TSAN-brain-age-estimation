@@ -47,14 +47,10 @@ class dense_layer(nn.Module):
     def __init__(self,inchannels,outchannels):
         super(dense_layer,self).__init__()
         self.block = nn.Sequential(
-            #nn.Conv3d(inchannels,outchannels,3,1,bias=False,padding=1),
             AC_layer(inchannels,outchannels),
-            # nn.ReLU(),
             nn.ELU(),
             nn.BatchNorm3d(outchannels),
-            #nn.Conv3d(outchannels,outchannels,3,1,bias=False,padding=1),
             AC_layer(outchannels,outchannels),
-            # nn.ReLU(),
             nn.ELU(),
             nn.BatchNorm3d(outchannels),
             nn.MaxPool3d(2,2),
@@ -70,20 +66,18 @@ class dense_layer(nn.Module):
         return x
 
 class second_stage_scaledense(nn.Module):
-    def __init__(self,nb_filter,grow_rate,nb_block):
-        super(dense_net,self).__init__()
+    def __init__(self,nb_filter,nb_block, use_gender=True):
+        super(second_stage_scaledense,self).__init__()
         self.nb_block = nb_block
+        self.use_gender = use_gender
         self.pre = nn.Sequential(
             nn.Conv3d(1,nb_filter,7,1,padding=1),
-            # nn.ReLU(),
             nn.ELU(),
         )
-        self.block, last_channels = self._make_block(nb_filter,grow_rate,nb_block)
+        self.block, last_channels = self._make_block(nb_filter,nb_block)
         self.gap = nn.AdaptiveAvgPool3d((1,1,1))
         self.fc = nn.Sequential(
             nn.Linear(last_channels,32),
-             # nn.Dropout(0.5),
-            # nn.ReLU(),
             nn.ELU(),
             )
 
@@ -96,23 +90,27 @@ class second_stage_scaledense(nn.Module):
         self.male_fc = nn.Sequential(
             nn.Linear(2,16),
             nn.Linear(16,8),
-            # nn.ReLU(),
             nn.ELU(),
             )
 
-        self.end_fc = nn.Sequential(
-            nn.Linear(56,32),
-            # nn.Dropout(0.5),
-            nn.Linear(32,16),
-            nn.Linear(16,1,bias=False)
+        self.end_fc_with_gender = nn.Sequential(
+            nn.Linear(56,16),
+            nn.Linear(16,1),
+            nn.ReLU()
+            )
+
+        self.end_fc_without_gender = nn.Sequential(
+            nn.Linear(48,16),
+            nn.Linear(16,1),
+            nn.ReLU()
             )
          
 
-    def _make_block(self,nb_filter,grow_rate,nb_block):
+    def _make_block(self,nb_filter,nb_block):
         blocks = []
         inchannels = nb_filter
         for i in range(nb_block):
-            outchannels = inchannels + grow_rate
+            outchannels = inchannels * 2
             blocks.append(dense_layer(inchannels,outchannels))
             inchannels = outchannels + inchannels
         return nn.Sequential(*blocks), inchannels
@@ -123,22 +121,26 @@ class second_stage_scaledense(nn.Module):
         x = self.gap(x)
         x = torch.reshape(x,(x.size(0),-1))
         x = self.fc(x)
-        male = torch.reshape(male_input,(male_input.size(0),-1))
-        male = self.male_fc(male)
         dis_age = self.dis_fc(dis_age_input)
-        x = torch.cat([x,male.type_as(x),dis_age],1)
-        x = self.end_fc(x)
-        x = torch.tanh(x)*20
+
+        if self.use_gender:
+            male = torch.reshape(male_input,(male_input.size(0),-1))
+            male = self.male_fc(male)
+            x = torch.cat([x,male.type_as(x),dis_age],1)
+            x = self.end_fc_with_gender(x)
+        else:
+            x = torch.cat([x,dis_age],1)
+            x = self.end_fc_without_gender(x)
+
         return x
+if __name__ == "__main__":
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu") 
+    model = second_stage_scaledense(8,5).to(device)
+    # print(model)
 
-# device = torch.device("cuda" if torch.cuda.is_available() else "cpu") 
-# model = dense_net(8,8,5).to(device)
-# # print(model)
-
-# iuput = torch.autograd.Variable(torch.rand(5,1,91,109,91)).to(device)
-# male_input = torch.autograd.Variable(torch.rand(5,2)).to(device)
-# dis_age = torch.autograd.Variable(torch.rand(5,1)).to(device)
-# out = model(iuput,male_input,dis_age)
-# print(out)
-# print(out.size())
-# summary(model,(1,91,109,91),(1,1))
+    iuput = torch.autograd.Variable(torch.rand(5,1,91,109,91)).to(device)
+    male_input = torch.autograd.Variable(torch.rand(5,2)).to(device)
+    dis_age = torch.autograd.Variable(torch.rand(5,1)).to(device)
+    out = model(iuput,male_input,dis_age)
+    print(out)
+    print(out.size())
