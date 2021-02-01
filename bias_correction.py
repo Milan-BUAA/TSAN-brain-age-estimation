@@ -6,7 +6,7 @@ from sklearn.linear_model import LinearRegression
 from scipy.stats import pearsonr,spearmanr
 
 # ==========-   load  prediction and target  ========== #
-root = './TMI_result/model5/'
+root = './train_result/'
 target = np.load(os.path.join(root,'target.npy'))
 prediction = np.load(os.path.join(root,'prediction.npy'))
 predicted_age_difference = prediction-target

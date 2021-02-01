@@ -1,13 +1,13 @@
 import os,torch
-import datetime, 
+import datetime
 import tensorboardX
 import numpy as np
 import torch.nn as nn
 from config import opt
-from prediction import test
 from network import ScaleDense
 from loss import rank_difference
 from load_data import IMG_Folder
+from prediction_first_stage import test
 from sklearn.metrics import mean_absolute_error
 
 
@@ -250,7 +250,7 @@ def train(train_loader, model, criterion1, criterion2, optimizer, device, epoch)
 
         # =========== compute output and loss =========== #
         model.zero_grad()
-        if opt.model == 'DenseNet':
+        if opt.model == 'ScaleDense':
             out = model(input,male)
 
         else:

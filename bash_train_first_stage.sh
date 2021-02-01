@@ -5,10 +5,10 @@ paths=/home/liuziyang/workspace/brain_age_prediction
 dataset=combine/18
 model=ScaleDense
 loss=mse
-batch_size=16
+batch_size=4
 lbd=10
 beta=0.1
-save_path=./model/combine/${model}_${loss}_lbd_${lbd}_beta_${beta}/
+save_path=./model/${model}_${loss}_lbd_${lbd}_beta_${beta}/
 label=${paths}/lables/combine.xls
 
 train_data=${paths}/data/NC/${dataset}/train
