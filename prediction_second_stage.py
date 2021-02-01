@@ -67,6 +67,7 @@ def main():
     # ======== test preformance ======== #
     test( valid_loader=test_loader
         , model=model
+        , first_stage_model = model_first_stage
         , criterion=criterion
         , device=device
         , save_npy=True

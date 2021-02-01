@@ -5,20 +5,20 @@ paths=/home/liuziyang/workspace/brain_age_prediction
 dataset=combine/18
 model=ScaleDense
 loss=mse
-batch_size=4
+batch_size=6
 lbd=10
 beta=0.1
 save_path=./model/${model}_${loss}_lbd_${lbd}_beta_${beta}/
 label=${paths}/lables/combine.xls
 
-train_data=${paths}/data/NC/${dataset}/test
+train_data=${paths}/data/NC/${dataset}/train
 valid_data=${paths}/data/NC/${dataset}/val
 test_data=${paths}/data/NC/${dataset}/test
 
 # ------ train and set the parameter
 CUDA_VISIBLE_DEVICES=0     python train_first_stage.py       \
 --batch_size               $batch_size         \
---epochs                   3                   \
+--epochs                   150                 \
 --lr                       5e-4                \
 --num_workers              15                  \
 --print_freq               40                  \

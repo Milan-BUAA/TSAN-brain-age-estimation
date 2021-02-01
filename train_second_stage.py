@@ -5,7 +5,7 @@ import numpy as np
 import torch.nn as nn
 from config import opt
 from discriminate_age import discriminate_age
-from prediction_first_stage import test
+from prediction_second_stage import test
 from network import ScaleDense,second_stage_ScaleDense
 from loss import rank_difference
 from load_data import IMG_Folder
@@ -201,6 +201,7 @@ def main(res):
     print('========= best model test result ===========')
     test_MAE,test_CC = test( test_loader
                             ,model_best
+                            ,model_first_stage
                             ,criterion1
                             ,device
                             ,npy_name='best_model_test_result'
@@ -219,6 +220,7 @@ def main(res):
                                 )['state_dict'])   
     test_MAE_last,test_CC_last = test( test_loader
                                       ,model_last
+                                      ,model_first_stage
                                       ,criterion1
                                       ,device
                                       ,save_npy=True
