@@ -321,7 +321,7 @@ def validate(valid_loader, model, criterion1,criterion2, device):
             target = target.type(torch.FloatTensor).to(device)
 
             # =========== compute output and loss =========== #
-            if opt.model == 'DenseNet':
+            if opt.model == 'ScaleDense':
                 out = model(input,male)
             else:
                 out = model(input)

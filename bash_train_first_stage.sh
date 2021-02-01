@@ -11,14 +11,14 @@ beta=0.1
 save_path=./model/${model}_${loss}_lbd_${lbd}_beta_${beta}/
 label=${paths}/lables/combine.xls
 
-train_data=${paths}/data/NC/${dataset}/train
+train_data=${paths}/data/NC/${dataset}/test
 valid_data=${paths}/data/NC/${dataset}/val
 test_data=${paths}/data/NC/${dataset}/test
 
 # ------ train and set the parameter
 CUDA_VISIBLE_DEVICES=0     python train_first_stage.py       \
 --batch_size               $batch_size         \
---epochs                   150                 \
+--epochs                   3                   \
 --lr                       5e-4                \
 --num_workers              15                  \
 --print_freq               40                  \

@@ -63,7 +63,7 @@ def main(res):
 
     # ===========  build and set model  =========== #  
     if opt.model == 'ScaleDense':
-        model = second_stage_ScaleDense.ScaleDense(8, 5, opt.use_gender)
+        model = second_stage_ScaleDense.second_stage_scaledense(8, 5, opt.use_gender)
     else:
         print('Wrong model choose')
 
@@ -71,7 +71,7 @@ def main(res):
     model = nn.DataParallel(model).to(device)
     model_test = model
 
-    model_first_stage = ScaleDense.ScaleDense(8,5,, opt.use_gender)
+    model_first_stage = ScaleDense.ScaleDense(8,5, opt.use_gender)
     model_first_stage = nn.DataParallel(model_first_stage).to(device)
     model_first_stage.load_state_dict(torch.load(opt.first_stage_net)['state_dict'])
     model_first_stage.eval()
