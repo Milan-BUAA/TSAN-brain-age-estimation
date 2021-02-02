@@ -5,7 +5,7 @@ dataset=combine/18
 dis_range=5
 model=ScaleDense
 loss=mse
-batch_size=4
+batch_size=6
 lbd=10
 beta=0.1
 first_stage_net=./model/ScaleDense_mse_lbd_10_beta_0.1/ScaleDense_best_model.pth.tar
@@ -20,7 +20,7 @@ test_data=${paths}/data/NC/${dataset}/test
 CUDA_VISIBLE_DEVICES=0     python  train_second_stage.py  \
 --batch_size               $batch_size         \
 --epochs                   150                 \
---lr                       5e-4                \
+--lr                       5e-5                \
 --num_workers              15                  \
 --print_freq               40                  \
 --mix_up                   0.0                 \
