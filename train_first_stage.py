@@ -205,25 +205,6 @@ def main(res):
     os.system('echo "best valid model TEST MAE mtc:{:.5f}" >> {}'.format(test_MAE.avg, res))
     os.system('echo "best valid model TEST rr mtc:{:.5f}" >> {}'.format(test_CC[0][1], res))
 
-
-    # =========== test on the last model on test data =========== #
-    model_last = model_test
-    model_last.load_state_dict(torch.load(
-                                os.path.join(opt.output_dir+opt.model+'_checkpoint.pth.tar')
-                                )['state_dict'])   
-    test_MAE_last,test_CC_last = test( test_loader
-                                      ,model_last
-                                      ,criterion1
-                                      ,device
-                                      ,save_npy=True
-                                      ,npy_name='last_model_test_result'
-                                      ,figure=False
-                                      ,figure_name='last_model.png')
-    print('========= last model test result ===========')
-    os.system('echo " ================================== "')
-    os.system('echo "the last model TEST MAE mtc:{:.5f}" >> {}'.format(test_MAE_last.avg, res))
-    os.system('echo "the last model TEST rr mtc:{:.5f}" >> {}'.format(test_CC_last[0][1], res))
-
 def train(train_loader, model, criterion1, criterion2, optimizer, device, epoch):
     '''   
     For training process\\
