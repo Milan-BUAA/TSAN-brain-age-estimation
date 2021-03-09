@@ -162,6 +162,7 @@ def main(res):
     # =========== write traning and validation log =========== #
     os.system('echo " ================================== "')
     os.system('echo " ==== TRAIN MAE mtc:{:.5f}" >> {}'.format(train_mae, res))
+    
     print('Epo - Mtc')
     mtc_epo = dict(zip(saved_metrics, saved_epos))
     rank_mtc = sorted(mtc_epo.keys(), reverse=False)
