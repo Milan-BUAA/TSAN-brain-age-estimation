@@ -22,15 +22,20 @@ def get_rank(batch_score, dim=0):
 # ===== loss function of combine rankg loss, age difference loss adn MSE ========= #
 class rank_difference(torch.nn.Module):
     '''
-    define 'ranking loss', which including Sprear man's ranking loss and 
-            age difference loss \\
-    beta: is defined to be used as a weighte between ranking loss and age difference loss. Since ranking loss is in (0,1)，
-    but age difference is relative large. in order to banlance these two loss functions, beta is set in (0,1)\\
-    num_pair: is define to choose the number of pairs which are used to compute the age difference loss
-    the total number of pair is batch size * num_pair  
+    define  \\
+    beta: is defined to be \\
     '''
 
     def __init__(self,beta=1):
+        '''
+        ['Ranking loss', which including Sprear man's ranking loss and age difference loss]
+
+        Args:
+            beta (int, optional): [used as a weighte between ranking loss and age difference loss. 
+                                   Since ranking loss is in (0,1),but age difference is relative large. 
+                                   In order to banlance these two loss functions, beta is set in (0,1)]. 
+                                   Defaults to 1.
+        '''
         super(rank_difference,self).__init__()
         self.criterion_mse = torch.nn.MSELoss()
         self.criterionl1 = torch.nn.L1Loss()
