@@ -71,6 +71,24 @@ def main():
 def test(valid_loader, model, criterion, device
         , save_npy=False,npy_name='test_result.npz'
         , figure=False, figure_name='True_age_and_predicted_age.png'):
+
+    '''
+    [Do Test process according pretrained model]
+
+    Args:
+        valid_loader (torch.dataloader): [test set dataloader defined in 'main']
+        model (torch CNN model): [pre-trained CNN model, which is used for brain age estimation]
+        criterion (torch loss): [loss function defined in 'main']
+        device (torch device): [GPU]
+        save_npy (bool, optional): [If choose to save predicted brain age in npy format]. Defaults to False.
+        npy_name (str, optional): [If choose to save predicted brain age, what is the npy filename]. Defaults to 'test_result.npz'.
+        figure (bool, optional): [If choose to plot and save scatter plot of predicted brain age]. Defaults to False.
+        figure_name (str, optional): [If choose to save predicted brain age scatter plot, what is the png filename]. Defaults to 'True_age_and_predicted_age.png'.
+
+    Returns:
+        [float]: MAE and pearson correlation coeficent of predicted brain age in teset set.
+    '''
+
     losses = AverageMeter()
     MAE = AverageMeter()
 
