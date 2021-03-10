@@ -233,7 +233,7 @@ def train(train_loader, model, criterion1, criterion2, optimizer, device, epoch)
         # =========== compute output and loss =========== #
         model.zero_grad()
         if opt.model == 'ScaleDense':
-            out = model(input,male)
+            out = model(input, male)
 
         else:
             out = model(input)

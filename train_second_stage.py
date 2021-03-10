@@ -257,8 +257,7 @@ def train(train_loader, model, first_stage_model,criterion1, criterion2, optimiz
             loss2 = 0
         loss = loss1 + opt.lbd * loss2
 
-        mae = metric(
-                output_age.detach(), target.detach().cpu())
+        mae = metric(output_age.detach(), target.detach().cpu())
         losses.update(loss, img.size(0))
         LOSS1.update(loss1,img.size(0))
         LOSS2.update(loss2,img.size(0))
