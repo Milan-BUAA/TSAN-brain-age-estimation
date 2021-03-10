@@ -36,15 +36,38 @@ def get_correction_parameter(Regresstion_fit_data_root=None):
     return reg.intercept_[0], reg.coef_[0][0]
 
 
-def Bias_correction(target, prediction, beta, alpha):
+def Bias_correction(target, prediction, alpha, beta):
+    '''
+    Function:
+        Do bias correction for brain age estimation test dataset
+    Args:
+        target: chronlogical age of test data
+        prediction: predicted brain age of test data
+        alpha: linear bias correction's slope
+        beta: linear bias correction's intercept
+    Return:
+        corrected predicted age, chronological age and corrected brain age difference
+    '''
     correct_prediction = prediction - (alpha*target + beta)
     correct_age_difference = correct_prediction - target
     return correct_prediction, target, correct_age_difference
 
 
 def load_cla_data(cla_data_root,model_name,subgroup):
+    '''
+    Function:
+        Loading the data that needs to be bias corrected according to the model name and subgroup name
+    Args:
+        cla_data_root: predicted brain age data path
+        model_name: The prefix name of saved predicted brain age data, which represents which model was used to predict
+        subgroup: The prefix name of save predicted brain age data, which represents which subgroup belongs to
+                  such as NC, MCI or AD
+    Return: loaded data
+            predicted brain age, chronological age and brain age difference
+
+    '''
     target = np.load(cla_data_root + model_name + subgroup +'.npz')['target']
-    predicton = np.load(cla_data_root + model_name + subgroup +'.npz')['target']
+    predicton = np.load(cla_data_root + model_name + subgroup +'.npz')['predicton']
     brain_age_difference = predicton - target
     return predicton, target, brain_age_difference
 
