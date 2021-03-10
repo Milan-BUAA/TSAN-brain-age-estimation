@@ -56,8 +56,7 @@ def main(res):
                                                 ,pin_memory=True
                                                 ,drop_last=False
                                                 )
-
-
+    
     # ===========  build and set model  =========== #  
     if opt.model == 'ScaleDense':
         model = ScaleDense.ScaleDense(8, 5, opt.use_gender)
@@ -91,8 +90,6 @@ def main(res):
                                                            )
     early_stopping = EarlyStopping(patience=5, verbose=True)
     
-
-
     # =========== define tensorboardX and show traing start signal =========== #
     saved_metrics, saved_epos = [], []
     num_epochs = int(opt.epochs)
@@ -179,14 +176,13 @@ def main(res):
     # ===========  clean up ===========  #
     torch.cuda.empty_cache()
     # =========== test the trained model on test dataset =========== #
-
     test_data = IMG_Folder(opt.excel_path, opt.test_folder)
     test_loader = torch.utils.data.DataLoader( test_data
                                               ,batch_size=opt.batch_size 
                                               ,num_workers=opt.num_workers 
                                               ,pin_memory=True
                                               ,drop_last=False)
-
+    
     # =========== test on the best model on test data =========== # 
     model_best = model_test
     model_best.load_state_dict( torch.load(
@@ -284,12 +280,18 @@ def train(train_loader, model, criterion1, criterion2, optimizer, device, epoch)
     return losses.avg,MAE.avg
 
 def validate(valid_loader, model, criterion1,criterion2, device):
-    '''   
-    For validation process\\
-    train_loader: data loader which is defined before \\
-    model: convolutional neural network \\
-    criterion1: main loss function\\
-    criterion2: aux loss function\\
+    '''
+    [summary]
+
+    Args:
+        valid_loader ([type]): [description]
+        model ([type]): [description]
+        criterion1 ([type]): [description]
+        criterion2 ([type]): [description]
+        device ([type]): [description]
+
+    Returns:
+        [type]: [description]
     '''
     losses = AverageMeter()
     MAE = AverageMeter()
