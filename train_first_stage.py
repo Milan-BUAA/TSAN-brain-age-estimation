@@ -141,7 +141,6 @@ def main(res):
             saved_epos.append(epoch)
             print('=======>   Best at epoch %d, valid MAE %f\n' % (epoch, best_metric))
 
-
         save_checkpoint({
                          'epoch': epoch
                         ,'arch': opt.model
@@ -207,13 +206,22 @@ def main(res):
     os.system('echo "best valid model TEST rr mtc:{:.5f}" >> {}'.format(test_CC[0][1], res))
 
 def train(train_loader, model, criterion1, criterion2, optimizer, device, epoch):
-    '''   
-    For training process\\
-    train_loader: data loader which is defined before \\
-    model: convolutional neural network \\
-    criterion1: main loss function\\
-    criterion2: aux loss function\\
     '''
+    For training process
+
+    Args:
+        train_loader (data loader): train data loader.
+        model (CNN model): convolutional neural network.
+        criterion1 (loss fucntion): main loss function.
+        criterion2 (loss fucntion): aux loss function.
+        optimizer (torch.optimizer): optimizer which is defined in 'main'
+        device (torch device type): default: GPU
+        epoch (int): training epoch idex
+
+    Returns:
+        [float]: training loss average and MAE average
+    '''
+    
     losses = AverageMeter()
     MAE = AverageMeter()
     LOSS1 = AverageMeter()
