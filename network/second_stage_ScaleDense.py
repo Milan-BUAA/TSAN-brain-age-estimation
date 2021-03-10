@@ -67,6 +67,14 @@ class dense_layer(nn.Module):
 
 class second_stage_scaledense(nn.Module):
     def __init__(self,nb_filter,nb_block, use_gender=True):
+        '''
+        Develop Scale Dense for brain age estimation
+
+        Args:
+            nb_filter (int): number of initial convolutional layer filter. Default: 8
+            nb_block (int): number of Dense block. Default: 5
+            use_gender (bool, optional): if use gender input. Default: True
+        '''
         super(second_stage_scaledense,self).__init__()
         self.nb_block = nb_block
         self.use_gender = use_gender
@@ -115,7 +123,7 @@ class second_stage_scaledense(nn.Module):
             inchannels = outchannels + inchannels
         return nn.Sequential(*blocks), inchannels
 
-    def forward(self,x, male_input,dis_age_input):
+    def forward(self,x, male_input, dis_age_input):
         x = self.pre(x)
         x = self.block(x)
         x = self.gap(x)

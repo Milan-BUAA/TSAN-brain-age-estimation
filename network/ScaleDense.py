@@ -4,7 +4,7 @@ import torch.nn.functional as F
 from torchsummary import summary
 
 class SE_block(nn.Module):
-    def __init__(self,inchannels,reduction = 16 ):
+    def __init__(self, inchannels, reduction = 16 ):
         super(SE_block,self).__init__()
         self.GAP = nn.AdaptiveAvgPool3d((1,1,1))
         self.FC1 = nn.Linear(inchannels,inchannels//reduction)
@@ -22,7 +22,7 @@ class SE_block(nn.Module):
         return model_input * x
 
 class AC_layer(nn.Module):
-    def __init__(self,inchannels,outchannels):
+    def __init__(self,inchannels, outchannels):
         super(AC_layer,self).__init__()
         self.conv1 = nn.Sequential(
             nn.Conv3d(inchannels,outchannels,(3,3,3),stride=1,padding=1,bias=False),
@@ -65,15 +65,15 @@ class dense_layer(nn.Module):
         return x
 
 class ScaleDense(nn.Module):
-    '''
-    Develop Scale dense \\
-    parameter：\\
-        nb_filter: initial convolutional layer filter\\
-        nb_block：number of Dense block \\
-        use_gender: if use gender input
+    def __init__(self,nb_filter=8, nb_block=5, use_gender=True):
+        '''
+        Develop Scale Dense for brain age estimation
 
-    '''
-    def __init__(self,nb_filter, nb_block, use_gender=True):
+        Args:
+            nb_filter (int): number of initial convolutional layer filter. Default: 8
+            nb_block (int): number of Dense block. Default: 5
+            use_gender (bool, optional): if use gender input. Default: True
+        '''
         super(ScaleDense,self).__init__()
         self.nb_block = nb_block
         self.use_gender = use_gender
@@ -106,7 +106,7 @@ class ScaleDense(nn.Module):
             )
 
 
-    def _make_block(self,nb_filter,nb_block):
+    def _make_block(self, nb_filter, nb_block):
         blocks = []
         inchannels = nb_filter
         for i in range(nb_block):
@@ -115,7 +115,7 @@ class ScaleDense(nn.Module):
             inchannels = outchannels + inchannels
         return nn.Sequential(*blocks), inchannels
 
-    def forward(self,x, male_input):
+    def forward(self, x, male_input):
         x = self.pre(x)
         x = self.block(x)
         x = self.gap(x)
