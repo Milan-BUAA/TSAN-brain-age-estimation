@@ -6,14 +6,21 @@ from sklearn import svm
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import roc_curve,confusion_matrix,roc_auc_score,accuracy_score
 from sklearn.model_selection import StratifiedShuffleSplit
-np.random.seed(12345)
+np.random.seed(0)
 
 def get_correction_parameter(Regresstion_fit_data_root=None):
+    '''
+    Function: load linear regression data and get linear regression bias correction parameter
+    Arg:
+        Regression_fit_data_root: the traning data path
+    Return:
+        linear regression intercept and slope
+    '''
     # ==========-   load  prediction and target  ========== #
     Regresstion_fit_target = np.load(os.path.join(Regresstion_fit_data_root
-                                                ,'target.npy'))
+                                                 ,'target.npy'))
     Regresstion_fit_prediction = np.load(os.path.join(Regresstion_fit_data_root
-                                                ,'prediction.npy'))
+                                                 ,'prediction.npy'))
 
     # ==========   reshape numpy array   ========== #
     Regresstion_fit_prediction = np.expand_dims(Regresstion_fit_prediction,axis=1)
@@ -24,21 +31,23 @@ def get_correction_parameter(Regresstion_fit_data_root=None):
     reg = LinearRegression()
     reg.fit(Regresstion_fit_target,Regresstion_fit_predicted_age_difference)
     print("The linear model is: Y = {:.5} + {:.5}X".format(reg.intercept_[0]
-                                                        , reg.coef_[0][0]))
+                                                          ,reg.coef_[0][0]))
 
     return reg.intercept_[0], reg.coef_[0][0]
 
 
 def Bias_correction(target, prediction, beta, alpha):
     correct_prediction = prediction - (alpha*target + beta)
-    correct_gap = correct_prediction - target
-    return correct_prediction, target, correct_gap
+    correct_age_difference = correct_prediction - target
+    return correct_prediction, target, correct_age_difference
+
 
 def load_cla_data(cla_data_root,model_name,subgroup):
     target = np.load(cla_data_root + model_name + subgroup +'.npz')['target']
     predicton = np.load(cla_data_root + model_name + subgroup +'.npz')['target']
     brain_age_difference = predicton - target
     return predicton, target, brain_age_difference
+
 
 def classfication(NC_PAD, MCI_PAD, AD_PAD, cli_type=1):
     
@@ -125,9 +134,9 @@ def main():
     cla_data_root = './AD_classfication/'
     model_name = 'tsan-mse-ranking-'
     NC_predicion, NC_target, NC_brain_age_difference = load_cla_data(
-                                                      cla_data_root
-                                                     ,model_name
-                                                     ,'NC')
+                                                       cla_data_root
+                                                     , model_name
+                                                     , 'NC')
     MCI_predicion, MCI_target, MCI_brain_age_difference = load_cla_data(
                                                       cla_data_root
                                                      ,model_name
