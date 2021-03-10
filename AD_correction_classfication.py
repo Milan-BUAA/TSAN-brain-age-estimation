@@ -73,16 +73,29 @@ def load_cla_data(cla_data_root,model_name,subgroup):
 
 
 def classfication(NC_PAD, MCI_PAD, AD_PAD, cli_type=1):
+    '''
+    Function:
+        Do classfication between healthy control and dementia samples
+    Args:
+        NC_PAD: Normal Control samples predicted age difference
+        MCI_PAD: Mild Cognitive Impairment predicted age difference
+        AD_PAD: Alzhimer's Disease samples predicted age difference
+    cli_type: choose classfication type:
+             1: NC vs. AD
+             2: NC vs. MCI
+             3: MCI vs. AD
+    '''
     
     MCI_PAD = np.expand_dims(MCI_PAD,axis=1)
     AD_PAD = np.expand_dims(AD_PAD,axis=1)
     NC_PAD = np.expand_dims(NC_PAD,axis=1)
     
-    NC_PAD = np.concatenate([NC_PAD,np.zeros_like(NC_PAD)],axis=1)
     if cli_type == 1:
+        NC_PAD = np.concatenate([NC_PAD,np.zeros_like(NC_PAD)],axis=1)
         AD_PAD = np.concatenate([AD_PAD,np.zeros_like(AD_PAD)+1],axis=1)
         Input_PAD = np.concatenate([NC_PAD, AD_PAD], axis=0)
     if cli_type == 2:
+        NC_PAD = np.concatenate([NC_PAD,np.zeros_like(NC_PAD)],axis=1)
         MCI_PAD = np.concatenate([MCI_PAD,np.zeros_like(MCI_PAD)+1],axis=1)
         Input_PAD = np.concatenate([NC_PAD, MCI_PAD], axis=0)
     if cli_type == 3:
