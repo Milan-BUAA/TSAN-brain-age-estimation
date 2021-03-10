@@ -279,19 +279,19 @@ def train(train_loader, model, criterion1, criterion2, optimizer, device, epoch)
 
     return losses.avg,MAE.avg
 
-def validate(valid_loader, model, criterion1,criterion2, device):
+def validate(valid_loader, model, criterion1, criterion2, device):
     '''
-    [summary]
-
+    For validation process
+    
     Args:
-        valid_loader ([type]): [description]
-        model ([type]): [description]
-        criterion1 ([type]): [description]
-        criterion2 ([type]): [description]
-        device ([type]): [description]
+        valid_loader (data loader): validation data loader.
+        model (CNN model): convolutional neural network.
+        criterion1 (loss fucntion): main loss function.
+        criterion2 (loss fucntion): aux loss function.
+        device (torch device type): default: GPU
 
     Returns:
-        [type]: [description]
+        [float]: training loss average and MAE average
     '''
     losses = AverageMeter()
     MAE = AverageMeter()
