@@ -183,16 +183,16 @@ def main():
     cli_type = 3
     
     print('===== Without Bias correction =====')
-    a = classfication(NC_brain_age_difference
-                    , MCI_brain_age_difference
-                    , AD_brain_age_difference
-                    , cli_type)
+    without_correction_classfication_result = classfication(NC_brain_age_difference
+                                            , MCI_brain_age_difference
+                                            , AD_brain_age_difference
+                                            , cli_type)
 
     print('===== Bias correction =====')
-    a = classfication(Bias_corrected_NC_PAD
-                    , Bias_corrected_MCI_PAD
-                    , Bias_corrected_AD_PAD
-                    , cli_type)
+    correction_classfication_result = classfication(Bias_corrected_NC_PAD
+                                    , Bias_corrected_MCI_PAD
+                                    , Bias_corrected_AD_PAD
+                                    , cli_type)
 
 main()
 
