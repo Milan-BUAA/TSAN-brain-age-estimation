@@ -3,7 +3,7 @@ import datetime
 import tensorboardX
 import numpy as np
 import torch.nn as nn
-from config import opt
+from utils.config import opt
 from network import ScaleDense
 from loss import rank_difference
 from load_data import IMG_Folder

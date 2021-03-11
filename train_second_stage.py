@@ -3,11 +3,11 @@ import datetime
 import tensorboardX
 import numpy as np
 import torch.nn as nn
-from config import opt
-from discriminate_age import discriminate_age
+from utils.config import opt
+from utils.discriminate_age import discriminate_age
 from prediction_second_stage import test
-from network import ScaleDense,Second_stage_ScaleDense
-from loss import rank_difference
+from model import ScaleDense,Second_stage_ScaleDense
+from model.loss import rank_difference
 from load_data import IMG_Folder
 from sklearn.metrics import mean_absolute_error
 

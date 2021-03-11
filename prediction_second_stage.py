@@ -2,12 +2,12 @@ import os,torch
 import numpy as np
 import torch.nn as nn
 import matplotlib.pyplot as plt
-from config import opt
+from cutils.onfig import opt
 from load_data import IMG_Folder
-from network import ScaleDense,Second_stage_ScaleDense
+from model import ScaleDense,Second_stage_ScaleDense
 from scipy.stats import pearsonr,spearmanr
 from sklearn.metrics import mean_absolute_error
-from discriminate_age import discriminate_age
+from utils.discriminate_age import discriminate_age
 
 class AverageMeter(object):
     """Computes and stores the average and current value"""

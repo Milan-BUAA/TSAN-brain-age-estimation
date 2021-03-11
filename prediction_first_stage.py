@@ -2,9 +2,9 @@ import numpy as np
 import torch.nn as nn
 import os,shutil,torch
 import matplotlib.pyplot as plt
-from config import opt
+from utils.config import opt
 from load_data import IMG_Folder
-from network import ScaleDense
+from model import ScaleDense
 from scipy.stats import pearsonr,spearmanr
 from sklearn.metrics import mean_absolute_error
 
