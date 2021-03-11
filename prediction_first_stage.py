@@ -35,10 +35,10 @@ def metric(output, target):
 def main():
     # ======== define data loader and CUDA device ======== #
     test_data = IMG_Folder(opt.excel_path, opt.test_folder)
-    device = torch.device('cuda:0,1,2,3' if torch.cuda.is_available() else 'cpu')
+    device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 
     # ========  build and set model  ======== #  
-    if opt.model == 'DenseNet':
+    if opt.model == 'ScaleDense':
         model = ScaleDense.ScaleDense(8, 5, opt.use_gender)
     else:
         print('Wrong model choose')
@@ -51,7 +51,7 @@ def main():
                                              ,batch_size=opt.batch_size
                                              ,num_workers=opt.num_workers
                                              ,pin_memory=True
-                                             ,drop_last=False
+                                             ,drop_last=True
                                              )
 
     # ======== load trained parameters ======== #

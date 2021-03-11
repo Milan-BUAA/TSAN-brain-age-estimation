@@ -7,7 +7,7 @@ from utils.config import opt
 from utils.discriminate_age import discriminate_age
 from prediction_second_stage import test
 from model import ScaleDense,Second_stage_ScaleDense
-from model.loss import rank_difference
+from model.loss import rank_difference_loss
 from load_data import IMG_Folder
 from sklearn.metrics import mean_absolute_error
 
@@ -50,14 +50,14 @@ def main(res):
                                                 ,batch_size=opt.batch_size
                                                 ,num_workers=opt.num_workers
                                                 ,pin_memory=True
-                                                ,drop_last=False
+                                                ,drop_last=True
                                                 ,shuffle=True
                                                 )
     valid_loader = torch.utils.data.DataLoader(  valid_data
                                                 ,batch_size=opt.batch_size 
                                                 ,num_workers=opt.num_workers 
                                                 ,pin_memory=True
-                                                ,drop_last=False
+                                                ,drop_last=True
                                                 )
 
 
@@ -80,8 +80,8 @@ def main(res):
     loss_func_dict = {
                       'mae': nn.L1Loss().to(device)
                      ,'mse': nn.MSELoss().to(device)
-                     ,'ranking':rank_difference(sorter_checkpoint_path=opt.sorter
-                                               ,beta=opt.beta).to(device)
+                     ,'ranking':rank_difference_loss(sorter_checkpoint_path=opt.sorter
+                                                    ,beta=opt.beta).to(device)
                     }
         
     criterion1 = loss_func_dict[opt.loss]
@@ -192,7 +192,7 @@ def main(res):
                                               ,batch_size=opt.batch_size 
                                               ,num_workers=opt.num_workers 
                                               ,pin_memory=True
-                                              ,drop_last=False)
+                                              ,drop_last=True)
 
     # =========== test on the best model on test data =========== # 
     model_best = model_test

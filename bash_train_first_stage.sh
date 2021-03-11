@@ -8,10 +8,10 @@ loss=mse
 batch_size=8
 lbd=10
 beta=0.1
-save_path=./pretrained_model/${model}_${loss}_lbd_${lbd}_beta_${beta}/
+save_path=./pretrained_model/test_sodeep_first_Stage/
 label=${paths}/lables/combine.xls
 
-train_data=${paths}/data/NC/${dataset}/train
+train_data=${paths}/data/NC/${dataset}/val
 valid_data=${paths}/data/NC/${dataset}/val
 test_data=${paths}/data/NC/${dataset}/test
 

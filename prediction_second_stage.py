@@ -2,7 +2,7 @@ import os,torch
 import numpy as np
 import torch.nn as nn
 import matplotlib.pyplot as plt
-from cutils.onfig import opt
+from utils.config import opt
 from load_data import IMG_Folder
 from model import ScaleDense,Second_stage_ScaleDense
 from scipy.stats import pearsonr,spearmanr
@@ -36,11 +36,11 @@ def metric(output, target):
 def main():
     # ======== define data loader and CUDA device ======== #
     test_data = IMG_Folder(opt.excel_path, opt.test_folder)
-    device = torch.device('cuda:0,1,2,3' if torch.cuda.is_available() else 'cpu')
+    device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 
     # ========  build and set model  ======== #  
     if opt.model == 'ScaleDense':
-        model = Second_stage_ScaleDense.ScaleDense(8, 5, opt.use_gender)
+        model = Second_stage_ScaleDense.second_stage_scaledense(8, 5, opt.use_gender)
     else:
         print('Wrong model choose')
 
@@ -57,7 +57,7 @@ def main():
                                              ,batch_size=opt.batch_size
                                              ,num_workers=opt.num_workers
                                              ,pin_memory=True
-                                             ,drop_last=False
+                                             ,drop_last=True
                                              )
 
     # ======== load trained parameters ======== #

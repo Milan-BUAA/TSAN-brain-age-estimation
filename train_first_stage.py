@@ -47,19 +47,19 @@ def main(res):
                                                 ,batch_size=opt.batch_size
                                                 ,num_workers=opt.num_workers
                                                 ,pin_memory=True
-                                                ,drop_last=False
+                                                ,drop_last=True
                                                 ,shuffle=True
                                                 )
     valid_loader = torch.utils.data.DataLoader(  valid_data
                                                 ,batch_size=opt.batch_size 
                                                 ,num_workers=opt.num_workers 
                                                 ,pin_memory=True
-                                                ,drop_last=False
+                                                ,drop_last=True
                                                 )
     
     # ===========  build and set model  =========== #  
     if opt.model == 'ScaleDense':
-        model = ScaleDense.ScaleDense(8, 1, opt.use_gender)
+        model = ScaleDense.ScaleDense(8, 5, opt.use_gender)
     else:
         print('Wrong model choose')
 
@@ -182,7 +182,7 @@ def main(res):
                                               ,batch_size=opt.batch_size 
                                               ,num_workers=opt.num_workers 
                                               ,pin_memory=True
-                                              ,drop_last=False)
+                                              ,drop_last=True)
     
     # =========== test on the best model on test data =========== # 
     model_best = model_test
