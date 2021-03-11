@@ -21,16 +21,15 @@ Author: Martin Engilberge
 """
 
 import torch
-
 from sodeep_model import model_loader
 
 #  ======== ranking loss function ============= #
 def get_rank(batch_score, dim=0):
-    rank = torch.argsort(batch_score, dim=dim)  #对输入的预测年龄排序
-    rank = torch.argsort(rank, dim=dim)         #对序号再进行排序
-    rank = (rank * -1) + batch_score.size(dim)  #序号越靠前，rank评分越高
+    rank = torch.argsort(batch_score, dim=dim)  
+    rank = torch.argsort(rank, dim=dim)         
+    rank = (rank * -1) + batch_score.size(dim)  
     rank = rank.float()
-    rank = rank / batch_score.size(dim)         #对ranking得分归一化
+    rank = rank / batch_score.size(dim)         
 
     return rank
 

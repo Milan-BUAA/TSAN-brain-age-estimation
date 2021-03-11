@@ -80,7 +80,8 @@ def main(res):
     loss_func_dict = {
                       'mae': nn.L1Loss().to(device)
                      ,'mse': nn.MSELoss().to(device)
-                     ,'ranking':rank_difference(beta=opt.beta).to(device)
+                     ,'ranking':rank_difference(sorter_checkpoint_path=opt.sorter
+                                               ,beta=opt.beta).to(device)
                     }
         
     criterion1 = loss_func_dict[opt.loss]
