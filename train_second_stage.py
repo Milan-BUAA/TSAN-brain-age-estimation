@@ -6,7 +6,7 @@ import torch.nn as nn
 from config import opt
 from discriminate_age import discriminate_age
 from prediction_second_stage import test
-from network import ScaleDense,second_stage_ScaleDense
+from network import ScaleDense,Second_stage_ScaleDense
 from loss import rank_difference
 from load_data import IMG_Folder
 from sklearn.metrics import mean_absolute_error
@@ -63,7 +63,7 @@ def main(res):
 
     # ===========  build and set model  =========== #  
     if opt.model == 'ScaleDense':
-        model = second_stage_ScaleDense.second_stage_scaledense(8, 5, opt.use_gender)
+        model = Second_stage_ScaleDense.second_stage_scaledense(8, 5, opt.use_gender)
     else:
         print('Wrong model choose')
 

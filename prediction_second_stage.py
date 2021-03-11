@@ -4,7 +4,7 @@ import torch.nn as nn
 import matplotlib.pyplot as plt
 from config import opt
 from load_data import IMG_Folder
-from network import ScaleDense,second_stage_ScaleDense
+from network import ScaleDense,Second_stage_ScaleDense
 from scipy.stats import pearsonr,spearmanr
 from sklearn.metrics import mean_absolute_error
 from discriminate_age import discriminate_age
@@ -40,7 +40,7 @@ def main():
 
     # ========  build and set model  ======== #  
     if opt.model == 'ScaleDense':
-        model = second_stage_ScaleDense.ScaleDense(8, 5, opt.use_gender)
+        model = Second_stage_ScaleDense.ScaleDense(8, 5, opt.use_gender)
     else:
         print('Wrong model choose')
 
