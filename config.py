@@ -33,7 +33,7 @@ parser.add_argument('--loss',       default='mse'   ,type=str)
 parser.add_argument('--lbd',        default=1       ,type=float)
 parser.add_argument('--beta',       default=0.5     ,type=float)
 parser.add_argument('--aux_loss',   default='ranking'  ,type=str)
-
+parser.add_argument('--sorter',     default='./Sodeep_pretrain_weight/best_lstmla_slen_32.pth.tar', type=str)
 # =========== ELSE ================ #
 parser.add_argument('--dis_range',        default=5 ,type=int)
 args = parser.parse_args()
