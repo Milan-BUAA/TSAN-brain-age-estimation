@@ -21,7 +21,7 @@ Author: Martin Engilberge
 """
 
 import torch
-from sodeep_model import model_loader
+from model.sodeep_model import model_loader
 
 #  ======== ranking loss function ============= #
 def get_rank(batch_score, dim=0):
@@ -134,7 +134,5 @@ class SpearmanLoss(torch.nn.Module):
     def forward(self, mem_pred, mem_gt, pr=False):
         rank_gt = get_rank(mem_gt)
 
-        rank_pred = self.sorter(mem_pred.unsqueeze(
-            0)).view(-1)
-
+        rank_pred = self.sorter(mem_pred.unsqueeze(0)).view(-1).unsqueeze(1)
         return self.criterion_mse(rank_pred, rank_gt) + self.lbd * self.criterionl1(mem_pred, mem_gt)

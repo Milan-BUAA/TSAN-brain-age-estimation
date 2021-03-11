@@ -5,7 +5,7 @@ import numpy as np
 import torch.nn as nn
 from utils.config import opt
 from model import ScaleDense
-from model.loss import rank_difference
+from model.loss import rank_difference_loss
 from load_data import IMG_Folder
 from prediction_first_stage import test
 from sklearn.metrics import mean_absolute_error
@@ -59,7 +59,7 @@ def main(res):
     
     # ===========  build and set model  =========== #  
     if opt.model == 'ScaleDense':
-        model = ScaleDense.ScaleDense(8, 5, opt.use_gender)
+        model = ScaleDense.ScaleDense(8, 1, opt.use_gender)
     else:
         print('Wrong model choose')
 
@@ -71,8 +71,8 @@ def main(res):
     loss_func_dict = {
                       'mae': nn.L1Loss().to(device)
                      ,'mse': nn.MSELoss().to(device)
-                     ,'ranking':rank_difference(sorter_checkpoint_path=opt.sorter
-                                               ,beta=opt.beta).to(device)
+                     ,'ranking':rank_difference_loss(sorter_checkpoint_path=opt.sorter
+                                                    ,beta=opt.beta).to(device)
                      }
         
     criterion1 = loss_func_dict[opt.loss]

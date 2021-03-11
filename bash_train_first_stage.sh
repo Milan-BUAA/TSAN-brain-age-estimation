@@ -5,16 +5,17 @@ paths=/home/liuziyang/workspace/brain_age_prediction
 dataset=combine/18
 model=ScaleDense
 loss=mse
-batch_size=6
+batch_size=8
 lbd=10
 beta=0.1
-save_path=./model/${model}_${loss}_lbd_${lbd}_beta_${beta}/
+save_path=./pretrained_model/${model}_${loss}_lbd_${lbd}_beta_${beta}/
 label=${paths}/lables/combine.xls
 
 train_data=${paths}/data/NC/${dataset}/train
 valid_data=${paths}/data/NC/${dataset}/val
 test_data=${paths}/data/NC/${dataset}/test
 
+sorter_path=./Sodeep_pretrain_weight/best_lstmla_slen_8.pth.tar
 # ------ train and set the parameter
 CUDA_VISIBLE_DEVICES=0     python train_first_stage.py       \
 --batch_size               $batch_size         \
@@ -34,3 +35,4 @@ CUDA_VISIBLE_DEVICES=0     python train_first_stage.py       \
 --excel_path               ${label}            \
 --model                    ${model}            \
 --output_dir               ${save_path}        \
+--sorter                   ${sorter_path}      \

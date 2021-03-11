@@ -4,7 +4,8 @@ import torch
 import torch.nn.functional as F
 import numpy as np 
 import matplotlib.pyplot as plt
-from sodeep import SpearmanLoss, load_sorter, get_rank
+from model.sodeep import SpearmanLoss, load_sorter
+
 '''
 Ranking loss function for brain age estimation
 '''
@@ -27,11 +28,10 @@ class rank_difference_loss(torch.nn.Module):
         self.beta = beta
 
     def forward(self, mem_pred, mem_gt):
+        ranking_loss = self.spearman_loss(mem_pred, mem_gt)
+
         a = np.random.randint(0,mem_pred.size(0),mem_pred.size(0))
         b = np.random.randint(0,mem_gt.size(0),mem_gt.size(0))
-
-       ranking_loss = self.spearman_loss(mem_pred, mem_gt)
-
         diff_mem_pred = (mem_pred[a]-mem_pred[b])
         diff_mem_gt = (mem_gt[a]-mem_gt[b])
         age_difference_loss = torch.mean((diff_mem_pred-diff_mem_gt)**2)
