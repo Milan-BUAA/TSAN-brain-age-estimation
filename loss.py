@@ -20,12 +20,7 @@ def get_rank(batch_score, dim=0):
     return rank
 
 # ===== loss function of combine rankg loss, age difference loss adn MSE ========= #
-class rank_difference(torch.nn.Module):
-    '''
-    define  \\
-    beta: is defined to be \\
-    '''
-
+class rank_difference_loss(torch.nn.Module):
     def __init__(self,beta=1):
         '''
         ['Ranking loss', which including Sprear man's ranking loss and age difference loss]
@@ -36,7 +31,7 @@ class rank_difference(torch.nn.Module):
                                    In order to banlance these two loss functions, beta is set in (0,1)]. 
                                    Defaults to 1.
         '''
-        super(rank_difference,self).__init__()
+        super(rank_difference_loss,self).__init__()
         self.criterion_mse = torch.nn.MSELoss()
         self.criterionl1 = torch.nn.L1Loss()
         self.beta = beta
