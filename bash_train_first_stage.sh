@@ -11,7 +11,7 @@ beta=0.1
 save_path=./pretrained_model/test_sodeep_first_Stage/
 label=${paths}/lables/combine.xls
 
-train_data=${paths}/data/NC/${dataset}/val
+train_data=${paths}/data/NC/${dataset}/train
 valid_data=${paths}/data/NC/${dataset}/val
 test_data=${paths}/data/NC/${dataset}/test
 
