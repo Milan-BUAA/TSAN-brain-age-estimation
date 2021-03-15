@@ -1,4 +1,4 @@
-import os,torch
+import os,torch,json
 import datetime
 import tensorboardX
 import numpy as np
@@ -28,7 +28,12 @@ def main(res):
     best_metric = 100
     device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 
-    print(opt)
+    json_path = os.path.join(opt.output_dir,'hyperparameter.json')
+    with open(json_path,'w') as f:
+            f.write(json.dumps(vars(opt)
+                            ,  ensure_ascii=False
+                            ,  indent=4
+                            ,  separators=(',', ':')))
     print("=========== start train the age prediction model =========== \n")
     print(" ==========> Using {} processes for data loader.".format(opt.num_workers))
 
