@@ -14,7 +14,7 @@ The experiments with 6586 MRIs showed that TSAN could provide accurate brain age
 
 ## Using the code:
 
-- **Clone this repository:**
+- ### **Clone this repository:**
 
 ```
 git clone https://github.com/liuziyang1106/TSAN
@@ -23,13 +23,13 @@ cd TSAN
 
 The code is stable using Python 3.6, Pytorch 1.4.0
 
-- **To install all the dependencies using pip:**	
+- ### **To install all the dependencies using pip:**	
 
 ```
 pip install -r requirments.txt
 ```
 
-- **Training Command:**
+- ### **Training Command:**
 
 ```
 # For training frist stage brian age estimation network
@@ -43,7 +43,7 @@ bash bash_train_second_stage.sh
 
 ​		Change model_name, data_path and other settings to train them
 
-- **Testing Command:**
+- ### **Testing Command:**
 
 ```
 # For Test frist stage brian age estimation network
