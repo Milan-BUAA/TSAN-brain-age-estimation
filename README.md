@@ -12,8 +12,6 @@ In this paper, a novel 3D convolutional network, called as two-stage-age-network
 
 ![TSAN](/imgs/TSAN.png)
 
-![ScaleDense](/imgs/scaledense.png)
-
 ## Using the code:
 
 - ### **Clone this repository:**
