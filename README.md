@@ -21,7 +21,7 @@ git clone https://github.com/liuziyang1106/TSAN
 cd TSAN
 ```
 
-The code is stable using Python 3.6, Pytorch 1.4.0
+The code is stable using Python 3.8, Pytorch 1.7
 
 - ### **To install all the dependencies using pip:**	
 
