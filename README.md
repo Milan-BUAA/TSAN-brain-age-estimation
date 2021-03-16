@@ -10,6 +10,8 @@ In this paper, a novel 3D convolutional network, called as two-stage-age-network
 - To our knowledge, TSAN is the first work to apply novel ranking losses in brain age estimation, together with the traditional mean square error (MSE) loss. 
 - Third, densely connected paths are used to combine feature maps with different scales. 
 
+![TSAN](/imgs/TSAN.png)
+
 ## Using the code:
 
 - ### **Clone this repository:**
