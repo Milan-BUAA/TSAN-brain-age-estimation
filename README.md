@@ -73,8 +73,6 @@ Please check related websites for getting the datasets used in this paper:
 
 Liu, Ziyang, et al. "Brain Age Estimation from MRI Using a Two-Stage Cascade Network with Ranking Loss." *International Conference on Medical Image Computing and Computer-Assisted Intervention*. Springer, Cham, 2020.[https://doi.org/10.1007/978-3-030-59728-3_20]
 
-`
-
 ```
 @inproceedings{liu2020brain,
   title={Brain Age Estimation from MRI Using a Two-Stage Cascade Network with Ranking Loss},
@@ -86,7 +84,7 @@ Liu, Ziyang, et al. "Brain Age Estimation from MRI Using a Two-Stage Cascade Net
 }
 ```
 
-`
+
 
 **Please consider star and/or watch this repository if you find it helpful, as we will keep updating t**
 
