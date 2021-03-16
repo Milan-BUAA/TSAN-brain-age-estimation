@@ -67,3 +67,8 @@ Please check related websites for getting the datasets used in this paper:
 
 [PAC 2019 website archive](https://web.archive.org/web/20200214101600/https://www.photon-ai.com/pac2019)
 
+### To cite
+
+Liu, Ziyang, et al. "Brain Age Estimation from MRI Using a Two-Stage Cascade Network with Ranking Loss." *International Conference on Medical Image Computing and Computer-Assisted Intervention*. Springer, Cham, 2020.[https://doi.org/10.1007/978-3-030-59728-3_20]
+
+**Please consider star and/or watch this repository if you find it helpful, as we will keep updating this repository for pre-trained models and weights.**
