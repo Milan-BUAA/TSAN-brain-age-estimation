@@ -84,8 +84,5 @@ Liu, Ziyang, et al. "Brain Age Estimation from MRI Using a Two-Stage Cascade Net
 }
 ```
 
+**Please consider star and/or watch this repository if you find it helpful, as we will keep updating this repository for pre-trained models and weights.**
 
-
-**Please consider star and/or watch this repository if you find it helpful, as we will keep updating t**
-
-**his repository for pre-trained models and weights.**
