@@ -1,6 +1,6 @@
 #! /bin/bash
-paths=/home/liuziyang/workspace/brain_age_prediction
-dataset=combine/18
+paths=/home/workspace/brain_age_prediction
+dataset=combine/
 
 dis_range=5
 model=ScaleDense
@@ -8,8 +8,8 @@ loss=mse
 batch_size=8
 lbd=10
 beta=0.1
-first_stage_net=./pretrained_model/test_sodeep_first_Stage/ScaleDense_best_model.pth.tar
-save_path=./pretrained_model/test_sodeep_${dis_range}_${model}/
+first_stage_net=./pretrained_model/best_model.pth.tar
+save_path=./model/
 label=${paths}/lables/combine.xls
 
 train_data=${paths}/data/NC/${dataset}/train

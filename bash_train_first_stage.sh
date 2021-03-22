@@ -1,14 +1,14 @@
 #!/bin/bash
 
-paths=/home/liuziyang/workspace/brain_age_prediction
+paths=/home/workspace/brain_age_prediction
 
-dataset=combine/18
+dataset=combine
 model=ScaleDense
 loss=mse
 batch_size=8
 lbd=10
 beta=0.1
-save_path=./pretrained_model/test_sodeep_first_Stage/
+save_path=./pretrained_model/
 label=${paths}/lables/combine.xls
 
 train_data=${paths}/data/NC/${dataset}/train
