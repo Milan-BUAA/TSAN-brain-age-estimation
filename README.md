@@ -31,6 +31,8 @@ pip install -r requirments.txt
 
 - ### **Training Command:**
 
+Change model_name, data_path and other settings to train them
+
 ```
 # For training frist stage brian age estimation network
 bash bash_train_first_stage.sh
@@ -41,9 +43,14 @@ bash bash_train_first_stage.sh
 bash bash_train_second_stage.sh
 ```
 
-​		Change model_name, data_path and other settings to train them
-
 - ### **Testing Command:**
+
+Change model_name, data_path and other settings to inference them
+
+```
+# For training frist stage brian age estimation network
+bash bash_train_first_stage.sh
+```
 
 ```
 # For Test frist stage brian age estimation network
