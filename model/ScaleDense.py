@@ -28,13 +28,13 @@ class AC_layer(nn.Module):
             nn.Conv3d(inchannels,outchannels,(3,3,3),stride=1,padding=1,bias=False),
             nn.BatchNorm3d(outchannels))
         self.conv2 = nn.Sequential(
-            nn.Conv3d(inchannels,outchannels,(1,3,3),stride=1,padding=(0,1,1),bias=False),
+            nn.Conv3d(inchannels,outchannels,(1,1,3),stride=1,padding=(0,0,1),bias=False),
             nn.BatchNorm3d(outchannels))
         self.conv3 = nn.Sequential(
-            nn.Conv3d(inchannels,outchannels,(3,1,3),stride=1,padding=(1,0,1),bias=False),
+            nn.Conv3d(inchannels,outchannels,(3,1,1),stride=1,padding=(1,0,0),bias=False),
             nn.BatchNorm3d(outchannels))
         self.conv4 = nn.Sequential(
-            nn.Conv3d(inchannels,outchannels,(3,3,1),stride=1,padding=(1,1,0),bias=False),
+            nn.Conv3d(inchannels,outchannels,(1,3,1),stride=1,padding=(0,1,0),bias=False),
             nn.BatchNorm3d(outchannels))
     def forward(self,x):
         x1 = self.conv1(x)
@@ -130,6 +130,11 @@ class ScaleDense(nn.Module):
             x = self.end_fc_without_gender(x)
         return x
 
+def get_parameter_number(net):
+    total_num = sum(p.numel() for p in net.parameters())
+    trainable_num = sum(p.numel() for p in net.parameters() if p.requires_grad)
+    return {'Total': total_num/1e6, 'Trainable': trainable_num /1e6}
+
 if __name__ == "__main__":
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu") 
     model = ScaleDense(8,5,True).to(device)
@@ -140,3 +145,4 @@ if __name__ == "__main__":
     print(out)
     print(out.size())
 
+    print(get_parameter_number(model))

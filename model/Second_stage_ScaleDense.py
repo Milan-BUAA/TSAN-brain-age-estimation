@@ -3,6 +3,25 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torchsummary import summary
 
+class SE_block(nn.Module):
+    def __init__(self,inchannels,reduction = 16 ):
+        super(SE_block,self).__init__()
+        self.GAP = nn.AdaptiveAvgPool3d((1,1,1))
+        self.FC1 = nn.Linear(inchannels,inchannels//reduction)
+        self.FC2 = nn.Linear(inchannels//reduction,inchannels)
+
+    def forward(self,x):
+        model_input = x
+        x = self.GAP(x)
+        x = torch.reshape(x,(x.size(0),-1))
+        x = self.FC1(x)
+        x = nn.ReLU()(x)
+        x = self.FC2(x)
+        x = nn.Sigmoid()(x)
+        x = x.view(x.size(0),x.size(1),1,1,1)
+        return model_input * x
+
+
 class AC_layer(nn.Module):
     def __init__(self,inchannels,outchannels):
         super(AC_layer,self).__init__()
@@ -25,39 +44,23 @@ class AC_layer(nn.Module):
         x4 = self.conv4(x)
         return x1 + x2 + x3 + x4
 
-class SE_block(nn.Module):
-    def __init__(self,inchannels,reduction = 16 ):
-        super(SE_block,self).__init__()
-        self.GAP = nn.AdaptiveAvgPool3d((1,1,1))
-        self.FC1 = nn.Linear(inchannels,inchannels//reduction)
-        self.FC2 = nn.Linear(inchannels//reduction,inchannels)
 
-    def forward(self,x):
-        model_input = x
-        x = self.GAP(x)
-        x = torch.reshape(x,(x.size(0),-1))
-        x = self.FC1(x)
-        x = nn.ReLU()(x)
-        x = self.FC2(x)
-        x = nn.Sigmoid()(x)
-        x = x.view(x.size(0),x.size(1),1,1,1)
-        return model_input * x
 
 class dense_layer(nn.Module):
     def __init__(self,inchannels,outchannels):
         super(dense_layer,self).__init__()
         self.block = nn.Sequential(
             AC_layer(inchannels,outchannels),
-            nn.ELU(),
             nn.BatchNorm3d(outchannels),
+            nn.ELU(),
             AC_layer(outchannels,outchannels),
-            nn.ELU(),
             nn.BatchNorm3d(outchannels),
-            nn.MaxPool3d(2,2),
+            nn.ELU(),
             SE_block(outchannels),
+            nn.MaxPool3d(2,2)
+            
 
         )
-        self.SE_model = SE_block(outchannels)
     def forward(self,x):
         
         new_features = self.block(x)
@@ -130,17 +133,25 @@ class second_stage_scaledense(nn.Module):
         x = torch.reshape(x,(x.size(0),-1))
         x = self.fc(x)
         dis_age = self.dis_fc(dis_age_input)
-
+        
         if self.use_gender:
             male = torch.reshape(male_input,(male_input.size(0),-1))
             male = self.male_fc(male)
             x = torch.cat([x,male.type_as(x),dis_age],1)
-            x = self.end_fc_with_gender(x)
+            x = self.end_fc_with_gender(x) 
+
         else:
             x = torch.cat([x,dis_age],1)
-            x = self.end_fc_without_gender(x)
+            x = self.end_fc_without_gender(x) 
+        print(x.shape)
+        print(dis_age_input.shape)
+        return x + dis_age_input
 
-        return x
+def get_parameter_number(net):
+    total_num = sum(p.numel() for p in net.parameters())
+    trainable_num = sum(p.numel() for p in net.parameters() if p.requires_grad)
+    return {'Total': total_num/1e6, 'Trainable': trainable_num/1e6}
+
 if __name__ == "__main__":
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu") 
     model = second_stage_scaledense(8,5).to(device)
@@ -152,3 +163,5 @@ if __name__ == "__main__":
     out = model(iuput,male_input,dis_age)
     print(out)
     print(out.size())
+
+    print(get_parameter_number(model))
