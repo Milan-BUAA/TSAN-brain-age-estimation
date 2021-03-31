@@ -1,14 +1,14 @@
 #!/bin/bash
 
-paths=/home/workspace/brain_age_prediction
+paths=/home/liuziyang/workspace/brain_age_prediction/
 
-dataset=combine
+dataset=combine/18
 model=ScaleDense
 loss=mse
 batch_size=8
 lbd=10
 beta=0.1
-save_path=./pretrained_model/
+save_path=./pretrained_mdoel/ScaleDense/
 label=${paths}/lables/combine.xls
 
 train_data=${paths}/data/NC/${dataset}/train
@@ -23,7 +23,6 @@ CUDA_VISIBLE_DEVICES=0     python train_first_stage.py       \
 --lr                       5e-4                \
 --num_workers              15                  \
 --print_freq               40                  \
---mix_up                   0.0                 \
 --weight_decay             2e-5                \
 --loss                     $loss               \
 --aux_loss                 ranking             \

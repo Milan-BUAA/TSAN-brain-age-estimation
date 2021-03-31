@@ -1,4 +1,5 @@
 import torch
+from torch._C import device
 import torch.nn as nn
 import torch.nn.functional as F
 from torchsummary import summary
@@ -136,13 +137,14 @@ def get_parameter_number(net):
     return {'Total': total_num/1e6, 'Trainable': trainable_num /1e6}
 
 if __name__ == "__main__":
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu") 
+    # device = torch.device("cuda" if torch.cuda.is_available() else "cpu") 
+    device = torch.device( "cpu")
     model = ScaleDense(8,5,True).to(device)
 
-    iuput = torch.autograd.Variable(torch.rand(6,1,91,109,91)).to(device)
-    male_input = torch.autograd.Variable(torch.rand(6,2)).to(device)
+    iuput = torch.autograd.Variable(torch.rand(1,1,91,109,91)).to(device)
+    male_input = torch.autograd.Variable(torch.rand(1,2)).to(device)
     out = model(iuput,male_input)
     print(out)
     print(out.size())
-
+    print(model)
     print(get_parameter_number(model))
