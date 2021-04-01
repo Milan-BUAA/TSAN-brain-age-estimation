@@ -152,8 +152,6 @@ class second_stage_scaledense(nn.Module):
         else:
             x = torch.cat([x,dis_age],1)
             x = self.end_fc_without_gender(x) 
-        print(x.shape)
-        print(dis_age_input.shape)
         return x + dis_age_input
 
 def get_parameter_number(net):
