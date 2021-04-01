@@ -76,9 +76,9 @@ def main(res):
     model = nn.DataParallel(model).to(device)
     model_test = model
 
-    model_first_stage = ScaleDense.ScaleDense(8,5, opt.use_gender)
+    model_first_stage = ScaleDense.ScaleDense(8,5, opt.use_gender, deploy=True)
+    model_first_stage.load_state_dict(torch.load(opt.first_stage_net))
     model_first_stage = nn.DataParallel(model_first_stage).to(device)
-    model_first_stage.load_state_dict(torch.load(opt.first_stage_net)['state_dict'])
     model_first_stage.eval()
 
     # =========== define the loss function =========== #
