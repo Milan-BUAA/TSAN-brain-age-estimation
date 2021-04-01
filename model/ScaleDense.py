@@ -46,7 +46,6 @@ class AC_layer(nn.Module):
     def forward(self,x):
         if self.deploy:
             x = self.fused_conv(x)
-            print(x.shape)
             return x
         else:
             x1 = self.conv1(x)
