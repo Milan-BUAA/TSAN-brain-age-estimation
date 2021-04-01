@@ -19,20 +19,12 @@ def _add_to_square_kernel(square_kernel, asym_kernel):
     square_kernel[:, :, square_h // 2 - asym_h // 2: square_h // 2 - asym_h // 2 + asym_h,
                                         square_w // 2 - asym_w // 2 : square_w // 2 - asym_w // 2 + asym_w] += asym_kernel
 
-model = ScaleDense.ScaleDense(8, 5, deploy=False)
-model.load_state_dict
-(torch.load("./pretrained_model/ScaleDense/ScaleDense_best_model.pth.tar")['state_dict'])
-for param_tensor in model.state_dict():
-        #打印 key value字典
-    print(param_tensor,'\t',model.state_dict()[param_tensor].size())
-SQUARE_KERNEL_KEYWORD = 'conv1.0.weight'
 
-
-def convert_deploy_weight():
-    square_conv_var_names = [name for name in model.state_dict() if SQUARE_KERNEL_KEYWORD in name]
+def convert_deploy_weight(train_model, root_path):
+    model_key = train_model.state_dict()
+    square_conv_var_names = [name for name in model_key if SQUARE_KERNEL_KEYWORD in name]
     deploy_dict = {}
 
-    model_key = model.state_dict()
     for square_name in square_conv_var_names:
         square_kernel = model_key[square_name]
         square_mean = model_key[square_name.replace(SQUARE_KERNEL_KEYWORD, 'conv1.1.running_mean')]
@@ -72,8 +64,17 @@ def convert_deploy_weight():
             deploy_dict[k] = v
 
 
-    torch.save(deploy_dict, './pretrained_model/ScaleDense/deploy_weight.pth.tar')
-    model = ScaleDense.ScaleDense(8, 5, deploy=True)
-    model.load_state_dict(torch.load('./pretrained_model/ScaleDense/deploy_weight.pth.tar'))
-    print(deploy_dict)
-    print(model)
+    torch.save(deploy_dict, root_path + 'deploy_weight.pth.tar')
+    # deploy_model.load_state_dict(torch.load(root_path +'deploy_weight.pth.tar'))
+
+if __name__ == "__main__":
+    root_path = './pretrained_model/ScaleDense/'
+    train_model = ScaleDense.ScaleDense(8, 5, deploy=False)
+    train_model.load_state_dict
+    (torch.load(root_path + "ScaleDense_best_model.pth.tar")['state_dict'])
+    for param_tensor in train_model.state_dict():
+            #打印 key value字典
+        print(param_tensor,'\t',train_model.state_dict()[param_tensor].size())
+    SQUARE_KERNEL_KEYWORD = 'conv1.0.weight'
+    deploy_model = ScaleDense.ScaleDense(8, 5, deplot=True)
+    convert_deploy_weight(train_model, deploy_model, root_path)
