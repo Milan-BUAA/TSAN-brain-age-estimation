@@ -1,10 +1,10 @@
 #! /bin/bash
 model=ScaleDense
-test_dirpath=/home/workspace/brain_age_prediction/data/NC/combine/test
-excel_dirpath=/home/workspace/brain_age_prediction/lables/combine.xls
+test_dirpath=/home/liuziyang/workspace/brain_age_prediction/data/NC/combine/18/test/
+excel_dirpath=/home/liuziyang/workspace/brain_age_prediction/lables/combine.xls
 sorter_path=./Sodeep_pretrain_weight/best_lstmla_slen_8.pth.tar
-model_dirpath=./model/seconde_stage/
-first_stage_net=./pretrained_model//ScaleDense_best_model.pth.tar
+model_dirpath=./pretrained_model/second_stage_test/
+first_stage_net=./pretrained_model/ScaleDense/ScaleDense_best_model.pth.tar
 
 # ------ train and set the parameter
 CUDA_VISIBLE_DEVICES=0 python prediction_second_stage.py \

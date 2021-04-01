@@ -40,19 +40,19 @@ def main():
 
     # ========  build and set model  ======== #  
     if opt.model == 'ScaleDense':
-        model = Second_stage_ScaleDense.second_stage_scaledense(8, 5, opt.use_gender, deploy=False)
+        model = Second_stage_ScaleDense.second_stage_scaledense(8, 5, opt.use_gender)
     else:
         print('Wrong model choose')
 
-    model_first_stage = ScaleDense.ScaleDense(8,5, opt.use_gender, deploy=True)
+    model_first_stage = ScaleDense.ScaleDense(8,5, opt.use_gender)
     model_first_stage = nn.DataParallel(model_first_stage).to(device)
-    model_first_stage.load_state_dict(torch.load(opt.first_stage_net))
+    model_first_stage.load_state_dict(torch.load(opt.first_stage_net)['state_dict'])
     model_first_stage.eval()
 
     # ======== load trained parameters ======== #
-    model.load_state_dict(torch.load(os.path.join(opt.output_dir+opt.model_name)))
 
     model = nn.DataParallel(model).to(device)
+    model.load_state_dict(torch.load(os.path.join(opt.output_dir+opt.model_name))['state_dict'])
     criterion = nn.MSELoss().to(device)
 
     # ======== build data loader ======== #
@@ -134,7 +134,7 @@ def test( valid_loader, model, first_stage_model,criterion
 
             output_age = predicted_residual_age + dis_age
             target_residual_age = target - dis_age
-            loss = criterion(output_age, target_residual_age)
+            loss = criterion(predicted_residual_age, target_residual_age)
             mae = metric(output_age.detach(), target.detach().cpu())
             
             out.append(output_age.cpu().numpy())
