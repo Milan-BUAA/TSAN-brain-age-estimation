@@ -39,14 +39,14 @@ def main():
 
     # ========  build and set model  ======== #  
     if opt.model == 'ScaleDense':
-        model = ScaleDense.ScaleDense(8, 5, opt.use_gender, True)
+        model = ScaleDense.ScaleDense(8, 5, opt.use_gender, False)
     else:
         print('Wrong model choose')
 
     # ======== load trained parameters ======== #
-    model.load_state_dict(torch.load(os.path.join(opt.output_dir+opt.model_name)))
     model = nn.DataParallel(model).to(device)
     criterion = nn.MSELoss().to(device)
+    model.load_state_dict(torch.load(os.path.join(opt.output_dir+opt.model_name))['state_dict'])
 
     # ======== build data loader ======== #
     test_loader = torch.utils.data.DataLoader(test_data

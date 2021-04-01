@@ -55,9 +55,11 @@ def convert_deploy_weight(train_model, root_path):
         fused_kernel = _fuse_kernel(square_kernel, square_gamma, square_std)
         _add_to_square_kernel(fused_kernel, _fuse_kernel(x_kernel, x_gamma, x_std))
         _add_to_square_kernel(fused_kernel, _fuse_kernel(y_kernel, y_gamma, y_std))
+        _add_to_square_kernel(fused_kernel, _fuse_kernel(z_kernel, z_gamma, z_std))
+        
 
         deploy_dict[square_name.replace(SQUARE_KERNEL_KEYWORD, 'fused_conv.weight')] = fused_kernel
-        deploy_dict[square_name.replace(SQUARE_KERNEL_KEYWORD, 'fused_conv.bias')] = fused_bias
+        # deploy_dict[square_name.replace(SQUARE_KERNEL_KEYWORD, 'fused_conv.bias')] = fused_bias
 
     for k,v in model_key.items():
         if 'conv1' not in k and 'conv2' not in k and 'conv3' not in k and 'conv4' not in k:
@@ -76,5 +78,5 @@ if __name__ == "__main__":
             #打印 key value字典
         print(param_tensor,'\t',train_model.state_dict()[param_tensor].size())
     SQUARE_KERNEL_KEYWORD = 'conv1.0.weight'
-    deploy_model = ScaleDense.ScaleDense(8, 5, deplot=True)
-    convert_deploy_weight(train_model, deploy_model, root_path)
+    deploy_model = ScaleDense.ScaleDense(8, 5, deploy=True)
+    convert_deploy_weight(train_model,  root_path)

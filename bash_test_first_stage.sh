@@ -12,7 +12,7 @@ CUDA_VISIBLE_DEVICES=0 python prediction_first_stage.py \
 --batch_size        8                                   \
 --num_workers       20                                  \
 --output_dir        ${model_dirpath}                    \
---model_name        deploy_weight.pth.tar               \
+--model_name        ${model}_best_model.pth.tar         \
 --test_folder       ${test_dirpath}                     \
 --excel_path        ${excel_dirpath}                    \
 --npz_name          brain_age.npz                       \

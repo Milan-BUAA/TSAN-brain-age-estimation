@@ -8,7 +8,7 @@ loss=mse
 batch_size=8
 lbd=10
 beta=0.1
-first_stage_net=./pretrained_model/ScaleDense/deploy_weight.pth.tar
+first_stage_net=./pretrained_model/ScaleDense/ScaleDense_best_model.pth.tar
 save_path=./pretrained_model/second_stage_test
 label=${paths}/lables/combine.xls
 
@@ -21,12 +21,12 @@ sorter_path=./Sodeep_pretrain_weight/best_lstmla_slen_8.pth.tar
 CUDA_VISIBLE_DEVICES=0     python  train_second_stage.py  \
 --batch_size               $batch_size         \
 --epochs                   150                 \
---lr                       5e-5                \
+--lr                       5e-4                \
 --num_workers              15                  \
---print_freq               40                  \
+--print_freq               1                   \
 --weight_decay             2e-5                \
 --loss                     $loss               \
---aux_loss                 ranking             \
+--aux_loss                 mse                 \
 --lbd                      $lbd                \
 --beta                     $beta               \
 --first_stage_net          ${first_stage_net}  \
