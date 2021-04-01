@@ -28,7 +28,7 @@ class AC_layer(nn.Module):
         self.deploy = deploy
 
         if self.deploy:
-            self.fused_conv = nn.Conv3d(inchannels,outchannels,(3,3,3), stride=1,padding=1,bias=True)
+            self.fused_conv = nn.Conv3d(inchannels,outchannels,(3,3,3), stride=1,padding=1,bias=False)
             
         else:
             self.conv1 = nn.Sequential(
