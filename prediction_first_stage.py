@@ -39,10 +39,12 @@ def main():
 
     # ========  build and set model  ======== #  
     if opt.model == 'ScaleDense':
-        model = ScaleDense.ScaleDense(8, 5, opt.use_gender)
+        model = ScaleDense.ScaleDense(8, 5, opt.use_gender, True)
     else:
         print('Wrong model choose')
 
+    # ======== load trained parameters ======== #
+    model.load_state_dict(torch.load(os.path.join(opt.output_dir+opt.model_name)))
     model = nn.DataParallel(model).to(device)
     criterion = nn.MSELoss().to(device)
 
@@ -53,10 +55,6 @@ def main():
                                              ,pin_memory=True
                                              ,drop_last=True
                                              )
-
-    # ======== load trained parameters ======== #
-    model.load_state_dict(torch.load(os.path.join(opt.output_dir+opt.model_name))['state_dict'])
-
 
     # ======== test preformance ======== #
     test( valid_loader=test_loader
@@ -106,7 +104,7 @@ def test(valid_loader, model, criterion, device
     with torch.no_grad():
         for _, (input, ids ,target,male) in enumerate(valid_loader):
             input = input.to(device).type(torch.FloatTensor)
-
+            
             # ======= convert male lable to one hot type ======= #
             male = torch.unsqueeze(male,1)
             male = torch.zeros(male.shape[0],2).scatter_(1,male,1)

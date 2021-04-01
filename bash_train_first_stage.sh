@@ -8,7 +8,7 @@ loss=mse
 batch_size=8
 lbd=10
 beta=0.1
-save_path=./pretrained_mdoel/ScaleDense/
+save_path=./pretrained_model/ScaleDense/
 label=${paths}/lables/combine.xls
 
 train_data=${paths}/data/NC/${dataset}/train
