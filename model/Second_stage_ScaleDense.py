@@ -23,32 +23,42 @@ class SE_block(nn.Module):
 
 
 class AC_layer(nn.Module):
-    def __init__(self,inchannels,outchannels):
+    def __init__(self,inchannels,outchannels, deploy=False):
         super(AC_layer,self).__init__()
-        self.conv1 = nn.Sequential(
-            nn.Conv3d(inchannels,outchannels,(3,3,3),stride=1,padding=1,bias=False),
-            nn.BatchNorm3d(outchannels))
-        self.conv2 = nn.Sequential(
-            nn.Conv3d(inchannels,outchannels,(1,1,3),stride=1,padding=(0,0,1),bias=False),
-            nn.BatchNorm3d(outchannels))
-        self.conv3 = nn.Sequential(
-            nn.Conv3d(inchannels,outchannels,(3,1,1),stride=1,padding=(1,0,0),bias=False),
-            nn.BatchNorm3d(outchannels))
-        self.conv4 = nn.Sequential(
-            nn.Conv3d(inchannels,outchannels,(1,3,1),stride=1,padding=(0,1,0),bias=False),
-            nn.BatchNorm3d(outchannels))
+        self.deploy = deploy
+        if self.deploy:
+            self.fused_conv = nn.Conv3d(inchannels,outchannels,(3,3,3), stride=1,padding=1,bias=True)
+            
+        else:
+            self.conv1 = nn.Sequential(
+                nn.Conv3d(inchannels,outchannels,(3,3,3),stride=1,padding=1,bias=False),
+                nn.BatchNorm3d(outchannels))
+            self.conv2 = nn.Sequential(
+                nn.Conv3d(inchannels,outchannels,(1,1,3),stride=1,padding=(0,0,1),bias=False),
+                nn.BatchNorm3d(outchannels))
+            self.conv3 = nn.Sequential(
+                nn.Conv3d(inchannels,outchannels,(3,1,1),stride=1,padding=(1,0,0),bias=False),
+                nn.BatchNorm3d(outchannels))
+            self.conv4 = nn.Sequential(
+                nn.Conv3d(inchannels,outchannels,(1,3,1),stride=1,padding=(0,1,0),bias=False),
+                nn.BatchNorm3d(outchannels))
     def forward(self,x):
-        x1 = self.conv1(x)
-        x2 = self.conv2(x)
-        x3 = self.conv3(x)
-        x4 = self.conv4(x)
-        return x1 + x2 + x3 + x4
-
+        if self.deploy:
+            x = self.fused_conv(x)
+            return x
+        else:
+            x1 = self.conv1(x)
+            x2 = self.conv2(x)
+            x3 = self.conv3(x)
+            x4 = self.conv4(x)
+            return x1 + x2 + x3 + x4
 
 
 class dense_layer(nn.Module):
-    def __init__(self,inchannels,outchannels):
+    def __init__(self,inchannels,outchannels, deploy=False):
         super(dense_layer,self).__init__()
+        self.deploy = deploy
+
         self.block = nn.Sequential(
             AC_layer(inchannels,outchannels),
             nn.BatchNorm3d(outchannels),
@@ -58,8 +68,6 @@ class dense_layer(nn.Module):
             nn.ELU(),
             SE_block(outchannels),
             nn.MaxPool3d(2,2)
-            
-
         )
     def forward(self,x):
         
@@ -69,7 +77,7 @@ class dense_layer(nn.Module):
         return x
 
 class second_stage_scaledense(nn.Module):
-    def __init__(self,nb_filter,nb_block, use_gender=True):
+    def __init__(self,nb_filter,nb_block, use_gender=True, deploy=False):
         '''
         Develop Scale Dense for brain age estimation
 
@@ -81,6 +89,7 @@ class second_stage_scaledense(nn.Module):
         super(second_stage_scaledense,self).__init__()
         self.nb_block = nb_block
         self.use_gender = use_gender
+        self.deploy = deploy
         self.pre = nn.Sequential(
             nn.Conv3d(1,nb_filter,kernel_size=7,stride=1
                      ,padding=1,dilation=2),
@@ -122,7 +131,7 @@ class second_stage_scaledense(nn.Module):
         inchannels = nb_filter
         for i in range(nb_block):
             outchannels = inchannels * 2
-            blocks.append(dense_layer(inchannels,outchannels))
+            blocks.append(dense_layer(inchannels,outchannels, self.deploy))
             inchannels = outchannels + inchannels
         return nn.Sequential(*blocks), inchannels
 

@@ -124,7 +124,7 @@ class ScaleDense(nn.Module):
         inchannels = nb_filter
         for i in range(nb_block):
             outchannels = inchannels * 2
-            blocks.append(dense_layer(inchannels,outchannels, deploy=self.deploy))
+            blocks.append(dense_layer(inchannels,outchannels,self.deploy))
             inchannels = outchannels + inchannels
         return nn.Sequential(*blocks), inchannels
 
