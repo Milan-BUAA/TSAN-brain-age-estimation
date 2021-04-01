@@ -76,9 +76,9 @@ def main(res):
     model = nn.DataParallel(model).to(device)
     model_test = model
 
-    model_first_stage = ScaleDense.ScaleDense(8,5, opt.use_gender, deploy=True)
-    model_first_stage.load_state_dict(torch.load(opt.first_stage_net))
+    model_first_stage = ScaleDense.ScaleDense(8, 5, opt.use_gender)
     model_first_stage = nn.DataParallel(model_first_stage).to(device)
+    model_first_stage.load_state_dict(torch.load(opt.first_stage_net)['state_dict'])
     model_first_stage.eval()
 
     # =========== define the loss function =========== #
@@ -245,20 +245,26 @@ def train(train_loader, model, first_stage_model,criterion1, criterion2, optimiz
 
         first_stage_predict = first_stage_model(input,male).detach()
         dis_age = discriminate_age(first_stage_predict,range=opt.dis_range).to(device)
-     
         # =========== compute output and loss =========== #
         model.zero_grad()
+        
         if opt.model == 'ScaleDense':
             predicted_residual_age = model(input, male, dis_age)
         else:
             predicted_residual_age = model(input, dis_age)
 
+        target_residual_age = target - dis_age
         output_age = predicted_residual_age + dis_age
-
+        print(first_stage_predict
+             ,target_residual_age
+             ,predicted_residual_age
+             ,output_age)
+        
+        
         # =========== compute loss =========== #
-        loss1 = criterion1(output_age, target)
+        loss1 = criterion1(predicted_residual_age, target_residual_age)
         if opt.lbd > 0:
-            loss2 = criterion2(output_age, target)
+            loss2 = criterion2(predicted_residual_age, target_residual_age)
         else:
             loss2 = 0
         loss = loss1 + opt.lbd * loss2
@@ -327,12 +333,12 @@ def validate(valid_loader, model, first_stage_model,criterion1,criterion2, devic
             else:
                 predicted_residual_age = model(input, dis_age)
 
+            target_residual_age = target - dis_age
             output_age = predicted_residual_age + dis_age
-
             # =========== compute loss =========== #
-            loss1 = criterion1(output_age, target)
+            loss1 = criterion1(output_age, target_residual_age)
             if opt.lbd > 0:
-                loss2 = criterion2(output_age, target)
+                loss2 = criterion2(output_age, target_residual_age)
             else:
                 loss2 = 0
             loss = loss1 + opt.lbd * loss2

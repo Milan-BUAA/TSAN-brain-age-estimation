@@ -133,8 +133,8 @@ def test( valid_loader, model, first_stage_model,criterion
                 predicted_residual_age = model(input,dis_age)
 
             output_age = predicted_residual_age + dis_age
-
-            loss = criterion(output_age, target)
+            target_residual_age = target - dis_age
+            loss = criterion(output_age, target_residual_age)
             mae = metric(output_age.detach(), target.detach().cpu())
             
             out.append(output_age.cpu().numpy())
