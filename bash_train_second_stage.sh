@@ -9,7 +9,7 @@ batch_size=8
 lbd=10
 beta=0.1
 first_stage_net=./pretrained_model/ScaleDense/ScaleDense_best_model.pth.tar
-save_path=./pretrained_model/second_stage_test/
+save_path=./pretrained_model/second_stage_auxloss_mae/
 label=${paths}/lables/combine.xls
 
 train_data=${paths}/data/NC/${dataset}/train
@@ -26,7 +26,7 @@ CUDA_VISIBLE_DEVICES=0     python  train_second_stage.py  \
 --print_freq               1                   \
 --weight_decay             2e-5                \
 --loss                     $loss               \
---aux_loss                 mse                 \
+--aux_loss                 mae                 \
 --lbd                      $lbd                \
 --beta                     $beta               \
 --first_stage_net          ${first_stage_net}  \

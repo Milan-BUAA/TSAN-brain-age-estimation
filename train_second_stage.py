@@ -255,7 +255,7 @@ def train(train_loader, model, first_stage_model,criterion1, criterion2, optimiz
 
         target_residual_age = target - dis_age
         output_age = predicted_residual_age + dis_age
-        print(first_stage_predict
+        print(dis_age
              ,target_residual_age
              ,predicted_residual_age
              ,output_age)
