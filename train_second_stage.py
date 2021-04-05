@@ -278,14 +278,8 @@ def train(train_loader, model, first_stage_model,criterion1, criterion2, optimiz
                   'Loss2 {LOSS2.val:.3f} ({LOSS2.avg:.3f})\t'
                   'Loss {loss.val:.4f} ({loss.avg:.4f})\t'
                   'MAE {MAE.val:.3f} ({MAE.avg:.3f})\t'.format
-                  ( epoch
-                  , opt.epochs
-                  , i
-                  , len(train_loader)
-                  , LOSS1=LOSS1
-                  , LOSS2=LOSS2
-                  , loss=losses
-                  , MAE=MAE )
+                  ( epoch, opt.epochs, i, len(train_loader)
+                  , LOSS1=LOSS1, LOSS2=LOSS2, loss=losses, MAE=MAE )
                   )
 
         # =========== loss gradient back progation and optimizer parameter =========== #
