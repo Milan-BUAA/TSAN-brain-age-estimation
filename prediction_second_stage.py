@@ -76,8 +76,7 @@ def main():
 
 def test( valid_loader, model, first_stage_model,criterion
         , device, save_npy=False,npy_name='test_result.npz'
-        , figure=False
-        , figure_name='True_age_and_predicted_age.png'):
+        , figure=False, figure_name='True_age_and_predicted_age.png'):
     '''
     [Do Test process according pretrained model]
 
@@ -111,7 +110,7 @@ def test( valid_loader, model, first_stage_model,criterion
 
     # ======= start test programmer ============= #
     with torch.no_grad():
-        for _, (input, ids ,target,male) in enumerate(valid_loader):
+        for _, (input, ids ,target, male) in enumerate(valid_loader):
             input = input.to(device).type(torch.FloatTensor)
 
             # ======= convert male lable to one hot type ======= #
@@ -127,14 +126,9 @@ def test( valid_loader, model, first_stage_model,criterion
             dis_age = discriminate_age(first_stage_predict,range=opt.dis_range).to(device)
         
             # ======= compute output and loss ======= #
-            if opt.model == 'ScaleDense' :
-                predicted_residual_age = model(input,male,dis_age)
-            else:
-                predicted_residual_age = model(input,dis_age)
-
-            output_age = predicted_residual_age + dis_age
+            predicted_residual_age, output_age = model(input,male,dis_age)
             target_residual_age = target - dis_age
-            loss = criterion(predicted_residual_age, target_residual_age)
+            loss = criterion(output_age, target)
             mae = metric(output_age.detach(), target.detach().cpu())
             
             out.append(output_age.cpu().numpy())
