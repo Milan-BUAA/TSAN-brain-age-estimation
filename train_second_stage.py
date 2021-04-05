@@ -289,12 +289,19 @@ def train(train_loader, model, first_stage_model,criterion1, criterion2, optimiz
     return losses.avg,MAE.avg
 
 def validate(valid_loader, model, first_stage_model,criterion1,criterion2, device):
-    '''   
-    For validation process\\
-    train_loader: data loader which is defined before \\
-    model: convolutional neural network \\
-    criterion1: main loss function\\
-    criterion2: aux loss function\\
+    '''
+    [For valid the second stage network]
+
+    Args:
+        valid_loader ([data loader]): [validation data loader.]
+        model ([CNN model]): [convolutional neural network.]
+        first_stage_model ([pytorch CNN model]): [pretrained brain age estimation model]
+        criterion1 ([loss fucntion]): [main loss function.]
+        criterion2 ([loss fucntion]): [aux loss function.]
+        device ([torch device type]): [default: GPU]
+
+    Returns:
+        [float]: training loss average and MAE average
     '''
     losses = AverageMeter()
     MAE = AverageMeter()
