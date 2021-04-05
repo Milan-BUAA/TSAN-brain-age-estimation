@@ -40,11 +40,9 @@ def main(res):
 
     # ===========  define data folder and CUDA device =========== #
     train_data = IMG_Folder( opt.excel_path
-                            ,opt.train_folder
-                            )
+                            ,opt.train_folder)
     valid_data = IMG_Folder( opt.excel_path
-                            ,opt.valid_folder
-                            )
+                            ,opt.valid_folder)
     
 
     # ===========  define data loader =========== #
@@ -73,8 +71,7 @@ def main(res):
     model_test = model
 
     # =========== define the loss function =========== #
-    loss_func_dict = {
-                      'mae': nn.L1Loss().to(device)
+    loss_func_dict = {'mae': nn.L1Loss().to(device)
                      ,'mse': nn.MSELoss().to(device)
                      ,'ranking':rank_difference_loss(sorter_checkpoint_path=opt.sorter
                                                     ,beta=opt.beta).to(device)
@@ -144,12 +141,10 @@ def main(res):
             saved_epos.append(epoch)
             print('=======>   Best at epoch %d, valid MAE %f\n' % (epoch, best_metric))
 
-        save_checkpoint({
-                         'epoch': epoch
+        save_checkpoint({'epoch': epoch
                         ,'arch': opt.model
                         ,'state_dict': model.state_dict()
-                        ,'optimizer': optimizer.state_dict()
-                        }
+                        ,'optimizer': optimizer.state_dict()}
                         , is_best
                         , opt.output_dir
                         , model_name=opt.model

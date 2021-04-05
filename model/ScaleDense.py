@@ -23,41 +23,30 @@ class SE_block(nn.Module):
         return model_input * x
 
 class AC_layer(nn.Module):
-    def __init__(self,inchannels, outchannels, deploy=False):
+    def __init__(self,inchannels, outchannels):
         super(AC_layer,self).__init__()
-        self.deploy = deploy
-
-        if self.deploy:
-            self.fused_conv = nn.Conv3d(inchannels,outchannels,(3,3,3), stride=1,padding=1,bias=False)
-            
-        else:
-            self.conv1 = nn.Sequential(
-                nn.Conv3d(inchannels,outchannels,(3,3,3),stride=1,padding=1,bias=False),
-                nn.BatchNorm3d(outchannels))
-            self.conv2 = nn.Sequential(
-                nn.Conv3d(inchannels,outchannels,(1,1,3),stride=1,padding=(0,0,1),bias=False),
-                nn.BatchNorm3d(outchannels))
-            self.conv3 = nn.Sequential(
-                nn.Conv3d(inchannels,outchannels,(3,1,1),stride=1,padding=(1,0,0),bias=False),
-                nn.BatchNorm3d(outchannels))
-            self.conv4 = nn.Sequential(
-                nn.Conv3d(inchannels,outchannels,(1,3,1),stride=1,padding=(0,1,0),bias=False),
-                nn.BatchNorm3d(outchannels))
+        self.conv1 = nn.Sequential(
+            nn.Conv3d(inchannels,outchannels,(3,3,3),stride=1,padding=1,bias=False),
+            nn.BatchNorm3d(outchannels))
+        self.conv2 = nn.Sequential(
+            nn.Conv3d(inchannels,outchannels,(1,1,3),stride=1,padding=(0,0,1),bias=False),
+            nn.BatchNorm3d(outchannels))
+        self.conv3 = nn.Sequential(
+            nn.Conv3d(inchannels,outchannels,(3,1,1),stride=1,padding=(1,0,0),bias=False),
+            nn.BatchNorm3d(outchannels))
+        self.conv4 = nn.Sequential(
+            nn.Conv3d(inchannels,outchannels,(1,3,1),stride=1,padding=(0,1,0),bias=False),
+            nn.BatchNorm3d(outchannels))
     def forward(self,x):
-        if self.deploy:
-            x = self.fused_conv(x)
-            return x
-        else:
-            x1 = self.conv1(x)
-            x2 = self.conv2(x)
-            x3 = self.conv3(x)
-            x4 = self.conv4(x)
-            return x1 + x2 + x3 + x4
+        x1 = self.conv1(x)
+        x2 = self.conv2(x)
+        x3 = self.conv3(x)
+        x4 = self.conv4(x)
+        return x1 + x2 + x3 + x4
 
 class dense_layer(nn.Module):
-    def __init__(self,inchannels,outchannels, deploy=False):
+    def __init__(self,inchannels,outchannels):
         super(dense_layer,self).__init__()
-        self.deploy = deploy
         self.block = nn.Sequential(
             AC_layer(inchannels,outchannels, self.deploy),
             nn.BatchNorm3d(outchannels),
@@ -77,7 +66,7 @@ class dense_layer(nn.Module):
         return x
 
 class ScaleDense(nn.Module):
-    def __init__(self,nb_filter=8, nb_block=5, use_gender=True, deploy=False):
+    def __init__(self,nb_filter=8, nb_block=5, use_gender=True):
         '''
         Develop Scale Dense for brain age estimation
 
@@ -89,7 +78,6 @@ class ScaleDense(nn.Module):
         super(ScaleDense,self).__init__()
         self.nb_block = nb_block
         self.use_gender = use_gender
-        self.deploy = deploy
         self.pre = nn.Sequential(
             nn.Conv3d(1,nb_filter,kernel_size=7,stride=1
                      ,padding=1,dilation=2),
@@ -124,7 +112,7 @@ class ScaleDense(nn.Module):
         inchannels = nb_filter
         for i in range(nb_block):
             outchannels = inchannels * 2
-            blocks.append(dense_layer(inchannels,outchannels,self.deploy))
+            blocks.append(dense_layer(inchannels,outchannels))
             inchannels = outchannels + inchannels
         return nn.Sequential(*blocks), inchannels
 
@@ -149,8 +137,7 @@ def get_parameter_number(net):
     return {'Total': total_num/1e6, 'Trainable': trainable_num /1e6}
 
 if __name__ == "__main__":
-    # device = torch.device("cuda" if torch.cuda.is_available() else "cpu") 
-    device = torch.device( "cpu")
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu") 
     model = ScaleDense(8,5,True).to(device)
 
     iuput = torch.autograd.Variable(torch.rand(1,1,91,109,91)).to(device)
