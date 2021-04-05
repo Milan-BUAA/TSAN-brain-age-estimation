@@ -93,11 +93,14 @@ def main(res):
     criterion2 = loss_func_dict[opt.aux_loss]
 
     # =========== define optimizer and learning rate scheduler =========== #
-    optimizer = torch.optim.Adam( model.parameters()
+    # optimizer = torch.optim.Adam( model.parameters()
+    #                              ,lr=opt.lr
+    #                              ,weight_decay=opt.weight_decay
+    #                              ,amsgrad=True
+    #                             )
+    optimizer = torch.optim.SGD(  model.parameters()
                                  ,lr=opt.lr
-                                 ,weight_decay=opt.weight_decay
-                                 ,amsgrad=True
-                                )
+                                 ,weight_decay=opt.weight_decay)
     scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau( optimizer
                                                            ,verbose=1
                                                            ,patience=3
@@ -248,27 +251,21 @@ def train(train_loader, model, first_stage_model,criterion1, criterion2, optimiz
         # =========== compute output and loss =========== #
         model.zero_grad()
         
-        if opt.model == 'ScaleDense':
-            predicted_residual_age = model(input, male, dis_age)
-        else:
-            predicted_residual_age = model(input, dis_age)
-
+        predicted_residual_age,output_age = model(input, male, dis_age)
         target_residual_age = target - dis_age
-        output_age = predicted_residual_age + dis_age
         print(dis_age
              ,target_residual_age
              ,predicted_residual_age
              ,output_age)
         
-        
         # =========== compute loss =========== #
         loss1 = criterion1(predicted_residual_age, target_residual_age)
         if opt.lbd > 0:
-            loss2 = criterion2(predicted_residual_age, target_residual_age)
+            loss2 = criterion2(output_age, target)
         else:
             loss2 = 0
         loss = loss1 + opt.lbd * loss2
-
+        print(loss1, loss2)
         mae = metric(output_age.detach(), target.detach().cpu())
         losses.update(loss, img.size(0))
         LOSS1.update(loss1,img.size(0))
@@ -328,17 +325,12 @@ def validate(valid_loader, model, first_stage_model,criterion1,criterion2, devic
             dis_age = discriminate_age(first_stage_predict,range=opt.dis_range).to(device)
         
             # =========== compute output and loss =========== #
-            if opt.model == 'ScaleDense':
-                predicted_residual_age = model(input, male, dis_age)
-            else:
-                predicted_residual_age = model(input, dis_age)
-
+            predicted_residual_age, output_age = model(input, male, dis_age)
             target_residual_age = target - dis_age
-            output_age = predicted_residual_age + dis_age
             # =========== compute loss =========== #
-            loss1 = criterion1(output_age, target_residual_age)
+            loss1 = criterion1(predicted_residual_age, target_residual_age)
             if opt.lbd > 0:
-                loss2 = criterion2(output_age, target_residual_age)
+                loss2 = criterion2(output_age, target)
             else:
                 loss2 = 0
             loss = loss1 + opt.lbd * loss2
