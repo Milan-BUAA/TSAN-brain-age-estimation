@@ -23,7 +23,7 @@ print("=> lambda      : {}".format(opt.lbd))
 print("=> batch size  : {}".format(opt.batch_size))
 print("=> learning rate    : {}".format(opt.lr))
 print("=> weight decay     : {}".format(opt.weight_decay))
-print("=> aux loss         : {}x{}".format(opt.aux_loss, opt.beta))
+print("=> aux loss         : {}x{}".format(opt.aux_loss, opt.lbd))
 
 
 
