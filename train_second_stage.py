@@ -43,11 +43,9 @@ def main(res):
 
     # ===========  define data folder and CUDA device =========== #
     train_data = IMG_Folder( opt.excel_path
-                            ,opt.train_folder
-                            )
+                            ,opt.train_folder)
     valid_data = IMG_Folder( opt.excel_path
-                            ,opt.valid_folder
-                            )
+                            ,opt.valid_folder)
     
 
     # ===========  define data loader =========== #
@@ -82,25 +80,18 @@ def main(res):
     model_first_stage.eval()
 
     # =========== define the loss function =========== #
-    loss_func_dict = {
-                      'mae': nn.L1Loss().to(device)
+    loss_func_dict = {'mae': nn.L1Loss().to(device)
                      ,'mse': nn.MSELoss().to(device)
                      ,'ranking':rank_difference_loss(sorter_checkpoint_path=opt.sorter
-                                                    ,beta=opt.beta).to(device)
-                    }
+                                                    ,beta=opt.beta).to(device)}
         
     criterion1 = loss_func_dict[opt.loss]
     criterion2 = loss_func_dict[opt.aux_loss]
 
     # =========== define optimizer and learning rate scheduler =========== #
-    # optimizer = torch.optim.Adam( model.parameters()
-    #                              ,lr=opt.lr
-    #                              ,weight_decay=opt.weight_decay
-    #                              ,amsgrad=True
-    #                             )
-    optimizer = torch.optim.SGD(  model.parameters()
-                                 ,lr=opt.lr
-                                 ,weight_decay=opt.weight_decay)
+    optimizer = torch.optim.SGD(model.parameters()
+                               ,lr=opt.lr
+                               ,weight_decay=opt.weight_decay)
     scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau( optimizer
                                                            ,verbose=1
                                                            ,patience=3
@@ -215,7 +206,7 @@ def main(res):
                             ,device
                             ,npy_name='best_model_test_result'
                             ,save_npy=True
-                            ,figure=False
+                            ,figure=True
                             ,figure_name='best_model.png')
     os.system('echo " ================================== "')
     os.system('echo "best valid model TEST MAE mtc:{:.5f}" >> {}'.format(test_MAE.avg, res))
@@ -223,12 +214,21 @@ def main(res):
 
 
 def train(train_loader, model, first_stage_model,criterion1, criterion2, optimizer, device, epoch):
-    '''   
-    For training process\\
-    train_loader: data loader which is defined before \\
-    model: convolutional neural network \\
-    criterion1: main loss function\\
-    criterion2: aux loss function\\
+    '''
+    [For training the second stage network]
+
+    Args:
+        train_loader ([data loader]): [train data loader.]
+        model ([pytorch CNN model]): [convolutional neural network.]
+        first_stage_model ([pytorch CNN model]): [pretrained brain age estimation model]
+        criterion1 ([loss fucntion]): [main loss function.]
+        criterion2 ([loss fucntion]): [aux loss function.]
+        optimizer ([torch.optimizer]): [optimizer which is defined in 'main']
+        device ([torch device type]): [default: GPU]
+        epoch ([int]): [training epoch idex]
+
+    Returns:
+        [float]: training loss average and MAE average
     '''
     losses = AverageMeter()
     MAE = AverageMeter()
