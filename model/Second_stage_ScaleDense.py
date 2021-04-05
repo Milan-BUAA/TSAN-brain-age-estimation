@@ -105,14 +105,12 @@ class second_stage_scaledense(nn.Module):
 
         self.end_fc_with_gender = nn.Sequential(
             nn.Linear(56,16),
-            nn.Linear(16,1),
-            # nn.ReLU()
+            nn.Linear(16,1)
             )
 
         self.end_fc_without_gender = nn.Sequential(
             nn.Linear(48,16),
-            nn.Linear(16,1),
-            nn.ReLU()
+            nn.Linear(16,1)
             )
          
     def _make_block(self,nb_filter,nb_block):
