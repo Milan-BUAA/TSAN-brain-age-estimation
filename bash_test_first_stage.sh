@@ -1,7 +1,7 @@
 #! /bin/bash
 model=ScaleDense
-test_dirpath=/home/liuziyang/workspace/brain_age_prediction/data/NC/combine/18/test
-excel_dirpath=/home/liuziyang/workspace/brain_age_prediction/lables/combine.xls
+test_dirpath=/home/TSAN-brain-age-estimation/data/test
+excel_dirpath=/home/TSAN-brain-age-estimation/lables/brain_age.xls
 
 model_dirpath=./pretrained_model/ScaleDense/
 sorter_path=./Sodeep_pretrain_weight/best_lstmla_slen_8.pth.tar

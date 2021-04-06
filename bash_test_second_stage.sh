@@ -1,9 +1,9 @@
 #! /bin/bash
 model=ScaleDense
-test_dirpath=/home/liuziyang/workspace/brain_age_prediction/data/NC/combine/18/test/
-excel_dirpath=/home/liuziyang/workspace/brain_age_prediction/lables/combine.xls
+test_dirpath=/home/TSAN-brain-age-estimation/data/test/
+excel_dirpath=/home/TSAN-brain-age-estimation/lables/brain_age.xls
 sorter_path=./Sodeep_pretrain_weight/best_lstmla_slen_8.pth.tar
-model_dirpath=./pretrained_model/second_stage_auxloss_ranking/
+model_dirpath=./pretrained_model/second_stage/
 first_stage_net=./pretrained_model/ScaleDense/ScaleDense_best_model.pth.tar
 
 # ------ train and set the parameter

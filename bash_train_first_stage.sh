@@ -1,19 +1,18 @@
 #!/bin/bash
 
-paths=/home/liuziyang/workspace/brain_age_prediction/
+paths=/home/TSAN-brain-age-estimation/
 
-dataset=combine/18
 model=ScaleDense
 loss=mse
 batch_size=8
 lbd=10
 beta=0.1
 save_path=./pretrained_model/ScaleDense/
-label=${paths}/lables/combine.xls
+label=${paths}/lables/brain_age.xls
 
-train_data=${paths}/data/NC/${dataset}/train
-valid_data=${paths}/data/NC/${dataset}/val
-test_data=${paths}/data/NC/${dataset}/test
+train_data=${paths}/data/train
+valid_data=${paths}/data/val
+test_data=${paths}/data/test
 
 sorter_path=./Sodeep_pretrain_weight/best_lstmla_slen_8.pth.tar
 # ------ train and set the parameter

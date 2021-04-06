@@ -1,6 +1,5 @@
 #! /bin/bash
-paths=/home/liuziyang/workspace/brain_age_prediction/
-dataset=combine/18
+paths=/home/TSAN-brain-age-estimation/
 
 dis_range=5
 model=ScaleDense
@@ -9,24 +8,24 @@ batch_size=8
 lbd=10
 beta=0.1
 first_stage_net=./pretrained_model/ScaleDense/ScaleDense_best_model.pth.tar
-save_path=./pretrained_model/second_stage_auxloss_mae/
-label=${paths}/lables/combine.xls
+save_path=./pretrained_model/second_stage/
+label=${paths}/lables/brain_age.xls
 
-train_data=${paths}/data/NC/${dataset}/train
-valid_data=${paths}/data/NC/${dataset}/val
-test_data=${paths}/data/NC/${dataset}/test
+train_data=${paths}/data/train
+valid_data=${paths}/data/val
+test_data=${paths}/data/test
 sorter_path=./Sodeep_pretrain_weight/best_lstmla_slen_8.pth.tar
 
 # ------ train and set the parameter
 CUDA_VISIBLE_DEVICES=0     python  train_second_stage.py  \
 --batch_size               $batch_size         \
 --epochs                   150                 \
---lr                       5e-4                \
+--lr                       1e-3                \
 --num_workers              15                  \
 --print_freq               1                   \
 --weight_decay             2e-5                \
 --loss                     $loss               \
---aux_loss                 mae                 \
+--aux_loss                 ranking             \
 --lbd                      $lbd                \
 --beta                     $beta               \
 --first_stage_net          ${first_stage_net}  \
