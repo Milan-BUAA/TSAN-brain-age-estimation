@@ -6,7 +6,6 @@ model=ScaleDense
 loss=mse
 batch_size=8
 lbd=10
-beta=0.1
 first_stage_net=./pretrained_model/ScaleDense/ScaleDense_best_model.pth.tar
 save_path=./pretrained_model/second_stage/
 label=${paths}/lables/brain_age.xls
