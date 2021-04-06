@@ -31,7 +31,6 @@ parser.add_argument('--use_gender'  ,default=True   ,type=bool)
 # =========== loss function ================ #
 parser.add_argument('--loss',       default='mse'   ,type=str)
 parser.add_argument('--lbd',        default=1       ,type=float)
-parser.add_argument('--beta',       default=0.5     ,type=float)
 parser.add_argument('--aux_loss',   default='ranking'  ,type=str)
 parser.add_argument('--sorter',     default='./Sodeep_pretrain_weight/best_lstmla_slen_32.pth.tar', type=str)
 # =========== ELSE ================ #
