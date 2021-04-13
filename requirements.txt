@@ -1,30 +1,12 @@
 # This file may be used to create an environment using:
 # $ conda create --name <env> --file <this file>
 # platform: linux-64
-
-cudatoolkit=11.0.221=h6bb024c_0
-matplotlib=3.3.2=0
-matplotlib-base=3.3.2=py38h817c723_0
-mkl=2020.2=256
-mkl-service=2.3.0=py38he904b0f_0
-mkl_fft=1.2.0=py38h23d657b_0
-mkl_random=1.1.1=py38h0573a6f_0
-nibabel=3.2.1=pypi_0
-numpy=1.19.2=py38h54aff64_0
-numpy-base=1.19.2=py38hfa32c7d_0
-pandas=1.1.3=py38he6710b0_0
-python=3.8.5=h7579374_1
-python-dateutil=2.8.1=py_0
-python-magic=0.4.18=pypi_0
-python-slugify=4.0.1=pypi_0
-pytorch=1.7.0=py3.8_cuda11.0.221_cudnn8.0.3_0
-scikit-learn=0.23.2=py38h0573a6f_0
-scipy=1.5.2=py38h0b6359f_0
-seaborn=0.11.0=py_0
-simpleitk=2.0.2=py38h3fd9d12_0
-tensorboard=2.4.0=pypi_0
-tensorboard-plugin-wit=1.7.0=pypi_0
-tensorboardx=2.1=pypi_0
-torchsummary=1.5.1=pypi_0
-xlrd=1.2.0=pypi_0
+matplotlib=3.3.2
+nibabel=3.2.1
+numpy=1.19.2
+pandas=1.1.3
+python=3.8.5
+pytorch=1.7.0
+scikit-learn=0.23.2
+tensorboard=2.4.0
 
