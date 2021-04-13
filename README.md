@@ -17,15 +17,15 @@ In this paper, a novel 3D convolutional network, called as two-stage-age-network
 - ### **Clone this repository:**
 
 ```
-git clone https://github.com/liuziyang1106/TSAN
+git clone https://github.com/Milan-BUAA/TSAN-brain-age-estimation.git
 cd TSAN
 ```
 
 
 - ### **To install all the dependencies using pip:**
-The code is stable using, to use it you will need:
- * Python 3.8
- * Pytorch 1.7
+The code is stable using Python 3.8, to use it you will need:
+ * Python >= 3.8
+ * Pytorch >= 1.7
  * numpy
  * nibabel
  * tensorboardX
