@@ -21,9 +21,18 @@ git clone https://github.com/liuziyang1106/TSAN
 cd TSAN
 ```
 
-The code is stable using Python 3.8, Pytorch 1.7
 
-- ### **To install all the dependencies using pip:**	
+- ### **To install all the dependencies using pip:**
+The code is stable using, to use it you will need:
+ * Python 3.8
+ * Pytorch 1.7
+ * numpy
+ * nibabel
+ * tensorboardX
+ * sklearn
+ * pandas
+
+Install dependencies with
 
 ```
 pip install -r requirements.txt
