@@ -26,7 +26,7 @@ The code is stable using Python 3.8, Pytorch 1.7
 - ### **To install all the dependencies using pip:**	
 
 ```
-pip install -r requirments.txt
+pip install -r requirements.txt
 ```
 
 - ### **Training Command:**
@@ -63,7 +63,7 @@ bash bash_test_second_stage.sh
 ```
 
 ## Pre-trained Model
-Download the ScaleDense and The second stage ScaleDense pretrained model: [Beihang Cloud](https://bhpan.buaa.edu.cn:443/link/7C6286240B710575452B3E8220032732), [Google Drive](https://drive.google.com/drive/folders/1-XlY-iNFvcqg0sYaRTu995azIQwHwTWC?usp=sharing)
+Download the ScaleDense and The second stage ScaleDense pretrained model: [Beihang Cloud](https://bhpan.buaa.edu.cn:443/link/7C6286240B710575452B3E8220032732)
 
 ## Datasets
 
@@ -74,23 +74,6 @@ Please check related websites for getting the datasets used in this paper:
 [OASIS](https://www.oasis-brains.org/)
 
 [PAC 2019 website archive](https://web.archive.org/web/20200214101600/https://www.photon-ai.com/pac2019)
-
-## To cite
-
-**If this repository was useful to your work, please consider citing us:**
-
-Liu, Ziyang, et al. "Brain Age Estimation from MRI Using a Two-Stage Cascade Network with Ranking Loss." *International Conference on Medical Image Computing and Computer-Assisted Intervention*. Springer, Cham, 2020.[https://doi.org/10.1007/978-3-030-59728-3_20]
-
-```
-@inproceedings{liu2020brain,
-  title={Brain Age Estimation from MRI Using a Two-Stage Cascade Network with Ranking Loss},
-  author={Liu, Ziyang and Cheng, Jian and Zhu, Haogang and Zhang, Jicong and Liu, Tao},
-  booktitle={International Conference on Medical Image Computing and Computer-Assisted Intervention},
-  pages={198--207},
-  year={2020},
-  organization={Springer}
-}
-```
 
 **Please consider star and/or watch this repository if you find it helpful, as we will keep updating this repository for pre-trained models and weights.**
 
