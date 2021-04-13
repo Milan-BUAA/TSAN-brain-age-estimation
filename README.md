@@ -40,7 +40,7 @@ pip install -r requirements.txt
 
 - ### **Training Command:**
 
-Change model_name, data_path and other settings to train them
+Change the model_name, data_path and other settings to train them
 
 ```
 # For training the frist stage brain age estimation network
@@ -49,13 +49,13 @@ bash bash_train_first_stage.sh
 
 ```
 # For training the second stage brain age estimation network
-# with the fisrt stage network
+# with the fisrt stage network pretrained model
 bash bash_train_second_stage.sh
 ```
 
 - ### **Testing Command:**
 
-Change model_name, data_path and other settings to inference them
+Change the model_name, data_path and other settings to inference them
 
 
 
