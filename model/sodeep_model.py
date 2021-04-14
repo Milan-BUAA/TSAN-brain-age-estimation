@@ -21,10 +21,12 @@ Author: Martin Engilberge
 """
 
 
+from os import stat
 import torch
 import torch.nn as nn
+import scipy.stats.stats as stats
+import numpy as np
 
-#  ======== ranking loss function ============= #
 def get_rank(batch_score, dim=0):
     rank = torch.argsort(batch_score, dim=dim)  
     rank = torch.argsort(rank, dim=dim)         
@@ -32,6 +34,16 @@ def get_rank(batch_score, dim=0):
     rank = rank.float()
     rank = rank / batch_score.size(dim)         
 
+    return rank
+
+
+def get_tiedrank(batch_score, dim=0):
+    rank = stats.rankdata(batch_score)
+    rank = stats.rankdata(rank) - 1    
+    rank = (rank * -1) + batch_score.size(dim)
+    rank = torch.from_numpy(rank)
+    rank = rank.float()
+    rank = rank / batch_score.size(dim)  
     return rank
 
 def model_loader(model_type, seq_len, pretrained_state_dict=None):
@@ -313,3 +325,13 @@ class lstm_large(nn.Module):
         out = self.conv1(out)
 
         return out.view(input_.size(0), -1)
+
+
+if __name__ == "__main__":
+    input = np.array([1,3,3,5,5,7],dtype=np.float32)
+    input = torch.FloatTensor(torch.from_numpy(input))
+    print(input)
+    rank = get_rank(input,dim=0)
+    tied_rank = get_tiedrank(input, dim=0)
+    print('get rank scores:', rank)
+    print('get tied rank scores:', tied_rank)
