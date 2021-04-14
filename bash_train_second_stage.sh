@@ -4,7 +4,7 @@ paths=/home/TSAN-brain-age-estimation/
 dis_range=5
 model=ScaleDense
 loss=mse
-batch_size=8
+batch_size=32
 lbd=10
 first_stage_net=./pretrained_model/ScaleDense/ScaleDense_best_model.pth.tar
 save_path=./pretrained_model/second_stage/
@@ -13,7 +13,7 @@ label=${paths}/lables/brain_age.xls
 train_data=${paths}/data/train
 valid_data=${paths}/data/val
 test_data=${paths}/data/test
-sorter_path=./Sodeep_pretrain_weight/best_lstmla_slen_8.pth.tar
+sorter_path=./Sodeep_pretrain_weight/best_lstmla_slen_${batch_size}.pth.tar
 
 # ------ train and set the parameter
 CUDA_VISIBLE_DEVICES=0     python  train_second_stage.py  \
