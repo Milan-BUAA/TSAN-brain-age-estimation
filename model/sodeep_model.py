@@ -140,101 +140,6 @@ class lstm_baseline(nn.Module):
         return out.view(input_.size(0), -1)
 
 
-class gru_constrained(nn.Module):
-    def __init__(self, seq_len):
-        super(gru_constrained, self).__init__()
-        self.rnn = nn.GRU(1, 32, 6, batch_first=True, bidirectional=True)
-
-        self.sig = torch.nn.Sigmoid()
-
-    def forward(self, input_):
-        input_ = (input_.reshape(input_.size(0), -1, 1) / 2.0) + 1
-        input_ = self.sig(input_)
-
-        x, hn = self.rnn(input_)
-        out = x.sum(dim=2)
-
-        out = self.sig(out)
-
-        return out.view(input_.size(0), -1)
-
-
-class gru_proj(nn.Module):
-
-    def __init__(self, seq_len):
-        super(gru_proj, self).__init__()
-        self.rnn = nn.GRU(1, 128, 6, batch_first=True, bidirectional=True)
-        self.conv1 = nn.Conv1d(seq_len, seq_len, 256)
-
-        self.sig = torch.nn.Sigmoid()
-
-    def forward(self, input_):
-        input_ = (input_.reshape(input_.size(0), -1, 1) / 2.0) + 1
-
-        input_ = self.sig(input_)
-
-        out, _ = self.rnn(input_)
-        out = self.conv1(out)
-
-        out = self.sig(out)
-
-        return out.view(input_.size(0), -1)
-
-
-class cnn(nn.Module):
-    def __init__(self, seq_len):
-        super(cnn, self).__init__()
-        self.layer1 = nn.Sequential(
-            nn.Conv1d(1, 8, 2),
-            nn.PReLU())
-        self.layer2 = nn.Sequential(
-            nn.Conv1d(8, 16, 3),
-            nn.BatchNorm1d(16),
-            nn.PReLU())
-        self.layer3 = nn.Sequential(
-            nn.Conv1d(16, 32, 5),
-            nn.PReLU())
-        self.layer4 = nn.Sequential(
-            nn.Conv1d(32, 64, 7),
-            nn.BatchNorm1d(64),
-            nn.PReLU())
-        self.layer5 = nn.Sequential(
-            nn.Conv1d(64, 96, 10),
-            nn.PReLU())
-        self.layer6 = nn.Sequential(
-            nn.Conv1d(96, 128, 7),
-            nn.BatchNorm1d(128),
-            nn.PReLU())
-        self.layer7 = nn.Sequential(
-            nn.Conv1d(128, 256, 5),
-            nn.PReLU())
-        self.layer8 = nn.Sequential(
-            nn.Conv1d(256, 256, 3),
-            nn.BatchNorm1d(256),
-            nn.PReLU())
-        self.layer9 = nn.Sequential(
-            nn.Conv1d(256, 128, 3),
-            nn.PReLU())
-        self.layer10 = nn.Conv1d(128, seq_len, 64)
-
-    def forward(self, input_):
-        out = input_.unsqueeze(1)
-        out = self.layer1(out)
-        out = self.layer2(out)
-        out = self.layer3(out)
-        out = self.layer4(out)
-        out = self.layer5(out)
-        out = self.layer6(out)
-        out = self.layer7(out)
-        out = self.layer8(out)
-        out = self.layer9(out)
-        out = self.layer10(out).view(input_.size(0), -1)
-        out = torch.sigmoid(out)
-
-        out = out
-        return out
-
-
 class mlp(nn.Module):
     def __init__(self, seq_len):
         super(mlp, self).__init__()
@@ -251,20 +156,6 @@ class mlp(nn.Module):
         out = self.lin3(self.relu(out))
 
         return out.view(input_.size(0), -1)
-
-
-class gru_sum(nn.Module):
-    def __init__(self, seq_len):
-        super(gru_sum, self).__init__()
-        self.lstm = nn.GRU(1, 4, 1, batch_first=True, bidirectional=True)
-
-    def forward(self, input_):
-        input_ = input_.reshape(input_.size(0), -1, 1)
-        out, _ = self.lstm(input_)
-        out = out.sum(dim=2)
-
-        return out.view(input_.size(0), -1)
-
 
 class lstm_end(nn.Module):
     def __init__(self, seq_len):
