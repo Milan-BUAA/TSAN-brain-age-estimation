@@ -149,13 +149,12 @@ def get_parameter_number(net):
 if __name__ == "__main__":
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu") 
     model = second_stage_scaledense(8,5).to(device)
-    # print(model)
+    print(model)
 
     iuput = torch.autograd.Variable(torch.rand(5,1,91,109,91)).to(device)
     male_input = torch.autograd.Variable(torch.rand(5,2)).to(device)
     dis_age = torch.autograd.Variable(torch.rand(5,1)).to(device)
-    out = model(iuput,male_input,dis_age)
-    print(out)
-    print(out.size())
+    predicted_residual_age, output_age = model(iuput,male_input,dis_age)
+    print(predicted_residual_age)
 
     print(get_parameter_number(model))
