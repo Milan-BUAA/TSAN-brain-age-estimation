@@ -20,8 +20,6 @@ This scripts permits one to reproduce training and experiments of:
 Author: Martin Engilberge
 """
 
-
-from os import stat
 import torch
 import torch.nn as nn
 import scipy.stats.stats as stats
@@ -50,22 +48,12 @@ def model_loader(model_type, seq_len, pretrained_state_dict=None):
 
     if model_type == "lstm":
         model = lstm_baseline(seq_len)
-    elif model_type == "grus":
-        model = gru_sum(seq_len)
-    elif model_type == "gruc":
-        model = gru_constrained(seq_len)
-    elif model_type == "grup":
-        model = gru_proj(seq_len)
-    elif model_type == "exa":
-        model = sorter_exact()
     elif model_type == "lstmla":
         model = lstm_large(seq_len)
     elif model_type == "lstme":
         model = lstm_end(seq_len)
     elif model_type == "mlp":
         model = mlp(seq_len)
-    elif model_type == "cnn":
-        return cnn(seq_len)
     else:
         raise Exception("Model type unknown", model_type)
 
@@ -73,58 +61,6 @@ def model_loader(model_type, seq_len, pretrained_state_dict=None):
         model.load_state_dict(pretrained_state_dict)
 
     return model
-
-
-class UpdatingWrapper(nn.Module):
-    """ Wrapper to store the data forwarded throught the sorter and use them later to finetune the sorter on real data
-        Once enough data have been colected a call to the method update_sorter will perform the finetuning of the sorter.
-    """
-    def __init__(self, sorter, lr_sorter=0.00001):
-        super(UpdatingWrapper, self).__init__()
-        self.sorter = sorter
-
-        self.opti = torch.optim.Adam(self.sorter.parameters(), lr=lr_sorter, betas=(0.9, 0.999))
-        self.criterion = nn.L1Loss()
-
-        self.average_loss = list()
-
-        self.collected_data = list()
-
-        self.nb_update = 10
-
-    def forward(self, input_):
-        out = self.sorter(input_)
-
-        self.collected_data.append(input_.detach().cpu())
-        return out
-
-    def update_sorter(self):
-
-        for input_opti in self.collected_data:
-            self.opti.zero_grad()
-
-            input_opti = input_opti.cuda()
-            input_opti.requires_grad = True
-
-            rank_gt = get_rank(input_opti)
-
-            out_opti = self.sorter(input_opti)
-
-            loss = self.criterion(out_opti, rank_gt)
-            loss.backward()
-            self.opti.step()
-
-            self.average_loss.append(loss.item())
-
-            # Empty collected data
-            self.collected_data = list()
-
-    def save_data(self, path):
-        torch.save(self.collected_data, path)
-
-    def get_loss_average(self, windows=50):
-        return sum(self.average_loss[-windows:]) / min(len(self.average_loss), windows)
-
 
 class lstm_baseline(nn.Module):
     def __init__(self, seq_len):
@@ -138,7 +74,6 @@ class lstm_baseline(nn.Module):
         out = self.conv1(out)
 
         return out.view(input_.size(0), -1)
-
 
 class mlp(nn.Module):
     def __init__(self, seq_len):
@@ -171,37 +106,6 @@ class lstm_end(nn.Module):
         out = out.sum(dim=2)
 
         return out
-
-
-class sorter_exact(nn.Module):
-
-    def __init__(self):
-        super(sorter_exact, self).__init__()
-
-    def comp(self, inpu):
-        in_mat1 = torch.triu(inpu.repeat(inpu.size(0), 1), diagonal=1)
-        in_mat2 = torch.triu(inpu.repeat(inpu.size(0), 1).t(), diagonal=1)
-
-        comp_first = (in_mat1 - in_mat2)
-        comp_second = (in_mat2 - in_mat1)
-
-        std1 = torch.std(comp_first).item()
-        std2 = torch.std(comp_second).item()
-
-        comp_first = torch.sigmoid(comp_first * (6.8 / std1))
-        comp_second = torch.sigmoid(comp_second * (6.8 / std2))
-
-        comp_first = torch.triu(comp_first, diagonal=1)
-        comp_second = torch.triu(comp_second, diagonal=1)
-
-        return (torch.sum(comp_first, 1) + torch.sum(comp_second, 0) + 1) / inpu.size(0)
-
-    def forward(self, input_):
-        out = [self.comp(input_[d]) for d in range(input_.size(0))]
-        out = torch.stack(out)
-
-        return out.view(input_.size(0), -1)
-
 
 class lstm_large(nn.Module):
 

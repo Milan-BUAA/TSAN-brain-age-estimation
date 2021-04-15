@@ -251,13 +251,9 @@ def train(train_loader, model, first_stage_model,criterion1, criterion2, optimiz
         # =========== compute output and loss =========== #
         model.zero_grad()
         
-        predicted_residual_age,output_age = model(input, male, dis_age)
+        predicted_residual_age, output_age = model(input, male, dis_age)
         target_residual_age = target - dis_age
-        print(dis_age
-             ,target_residual_age
-             ,predicted_residual_age
-             ,output_age)
-        
+            
         # =========== compute loss =========== #
         loss1 = criterion1(predicted_residual_age, target_residual_age)
         if opt.lbd > 0:
@@ -265,7 +261,6 @@ def train(train_loader, model, first_stage_model,criterion1, criterion2, optimiz
         else:
             loss2 = 0
         loss = loss1 + opt.lbd * loss2
-        print(loss1, loss2)
         mae = metric(output_age.detach(), target.detach().cpu())
         losses.update(loss, img.size(0))
         LOSS1.update(loss1,img.size(0))
