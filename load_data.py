@@ -59,23 +59,3 @@ class IMG_Folder(torch.utils.data.Dataset):
             img = torch.from_numpy(img).type(torch.FloatTensor)
             break
         return (img, sid, slabel, smale)
-
-
-if __name__ == '__main__':
-    path = "/data/lables/raw_age.xls"
-    a = read_table(path)    
-    loader = IMG_Folder(
-             data_path="/data/ziyang/age/data/stroke/nonlinear_brain"
-            ,excel_path=path
-            ,loader=nii_loader
-            )
-
-    train_loader = torch.utils.data.DataLoader(loader
-                                              ,batch_size=20
-                                              ,num_workers=10
-                                              ,shuffle=True
-                                               )
-    for i, (img,id,label,male) in enumerate(train_loader):
-        print(id)
-        print('age:',label)
-        print('gender:',male)
