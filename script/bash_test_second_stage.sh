@@ -1,14 +1,14 @@
 #! /bin/bash
 model=ScaleDense
 batch_size=32
-test_dirpath=/home/TSAN-brain-age-estimation/data/test/
-excel_dirpath=/home/TSAN-brain-age-estimation/lables/brain_age.xls
-sorter_path=./Sodeep_pretrain_weight/best_lstmla_slen_${batch_size}.pth.tar
+test_dirpath=./data/test/
+excel_dirpath=./data/dataset.xlsx
+sorter_path=./TASN/Sodeep_pretrain_weight/best_lstmla_slen_${batch_size}.pth.tar
 model_dirpath=./pretrained_model/second_stage/
 first_stage_net=./pretrained_model/ScaleDense/ScaleDense_best_model.pth.tar
 
 # ------ train and set the parameter
-CUDA_VISIBLE_DEVICES=0 python prediction_second_stage.py \
+CUDA_VISIBLE_DEVICES=0 python ./TSAN/prediction_second_stage.py \
 --model             ${model}                             \
 --batch_size        $batch_size                          \
 --output_dir        ${model_dirpath}                     \

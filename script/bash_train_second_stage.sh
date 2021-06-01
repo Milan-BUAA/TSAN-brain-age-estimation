@@ -1,23 +1,22 @@
 #! /bin/bash
-paths=./TSAN-brain-age-estimation/
 
 dis_range=5
 model=ScaleDense
 loss=mse
-batch_size=32
+batch_size=8
 lbd=10
 beta=1
 first_stage_net=./pretrained_model/ScaleDense/ScaleDense_best_model.pth.tar
 save_path=./pretrained_model/second_stage/
-label=${paths}/lables/brain_age.xls
+label=./data/dataset.xlsx
 
-train_data=${paths}/data/train
-valid_data=${paths}/data/val
-test_data=${paths}/data/test
-sorter_path=./Sodeep_pretrain_weight/best_lstmla_slen_${batch_size}.pth.tar
+train_data=./data/train
+valid_data=./data/val
+test_data=./data/test
+sorter_path=./TSAN/Sodeep_pretrain_weight/best_lstmla_slen_${batch_size}.pth.tar
 
 # ------ train and set the parameter
-CUDA_VISIBLE_DEVICES=0     python  train_second_stage.py  \
+CUDA_VISIBLE_DEVICES=0     python  ./TSAN/train_second_stage.py  \
 --batch_size               $batch_size         \
 --epochs                   150                 \
 --lr                       1e-5                \
