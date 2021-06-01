@@ -1,9 +1,5 @@
-import torch.nn as nn
-from torch.autograd import Variable
 import torch
-import torch.nn.functional as F
 import numpy as np 
-import matplotlib.pyplot as plt
 from model.sodeep import SpearmanLoss, load_sorter
 
 '''
@@ -16,10 +12,11 @@ class rank_difference_loss(torch.nn.Module):
         ['Ranking loss', which including Sprear man's ranking loss and age difference loss]
 
         Args:
-            beta (int, optional): [used as a weighte between ranking loss and age difference loss. 
-                                   Since ranking loss is in (0,1),but age difference is relative large. 
-                                   In order to banlance these two loss functions, beta is set in (0,1)]. 
-                                   Defaults to 1.
+            bate (float, optional): 
+            [used as a weighte between ranking loss and age difference loss. 
+            Since ranking loss is in (0,1),but age difference is relative large. 
+            In order to banlance these two loss functions, beta is set in (0,1)]. 
+            Defaults to 1.
         '''
         super(rank_difference_loss,self).__init__()
         self.spearman_loss = SpearmanLoss(*load_sorter(sorter_checkpoint_path))
@@ -37,6 +34,7 @@ class rank_difference_loss(torch.nn.Module):
         age_difference_loss = torch.mean((diff_mem_pred-diff_mem_gt)**2)
         
         loss = (ranking_loss) + self.beta * age_difference_loss
+        
         return loss
 
      

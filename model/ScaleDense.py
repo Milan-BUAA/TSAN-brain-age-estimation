@@ -1,8 +1,6 @@
 import torch
-from torch._C import device
 import torch.nn as nn
 import torch.nn.functional as F
-from torchsummary import summary
 
 class SE_block(nn.Module):
     def __init__(self, inchannels, reduction = 16 ):
