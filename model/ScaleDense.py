@@ -136,14 +136,3 @@ def get_parameter_number(net):
     trainable_num = sum(p.numel() for p in net.parameters() if p.requires_grad)
     return {'Total': total_num/1e6, 'Trainable': trainable_num /1e6}
 
-if __name__ == "__main__":
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu") 
-    model = ScaleDense(8,5,True).to(device)
-
-    iuput = torch.autograd.Variable(torch.rand(1,1,91,109,91)).to(device)
-    male_input = torch.autograd.Variable(torch.rand(1,2)).to(device)
-    out = model(iuput,male_input)
-    print(out)
-    print(out.size())
-    print(model)
-    print(get_parameter_number(model))

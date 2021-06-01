@@ -1,7 +1,6 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from torchsummary import summary
 
 class SE_block(nn.Module):
     def __init__(self,inchannels,reduction = 16 ):
@@ -146,15 +145,3 @@ def get_parameter_number(net):
     trainable_num = sum(p.numel() for p in net.parameters() if p.requires_grad)
     return {'Total': total_num/1e6, 'Trainable': trainable_num/1e6}
 
-if __name__ == "__main__":
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu") 
-    model = second_stage_scaledense(8,5).to(device)
-    print(model)
-
-    iuput = torch.autograd.Variable(torch.rand(5,1,91,109,91)).to(device)
-    male_input = torch.autograd.Variable(torch.rand(5,2)).to(device)
-    dis_age = torch.autograd.Variable(torch.rand(5,1)).to(device)
-    predicted_residual_age, output_age = model(iuput,male_input,dis_age)
-    print(predicted_residual_age)
-
-    print(get_parameter_number(model))
