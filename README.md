@@ -44,13 +44,13 @@ Change the model_name, data_path and other settings to train them
 
 ```
 # For training the frist stage brain age estimation network
-bash bash_train_first_stage.sh
+bash script/bash_train_first_stage.sh
 ```
 
 ```
 # For training the second stage brain age estimation network
 # with the fisrt stage network pretrained model
-bash bash_train_second_stage.sh
+bash script/bash_train_second_stage.sh
 ```
 
 - ### **Testing Command:**
@@ -61,13 +61,13 @@ Change the model_name, data_path and other settings to inference them
 
 ```
 # For testing the frist stage brain age estimation network
-bash bash_test_first_stage.sh
+bash script/bash_test_first_stage.sh
 ```
 
 ```
 # For testing the second stage brain age estimation network with 
 # the first stage network
-bash bash_test_second_stage.sh
+bash script/bash_test_second_stage.sh
 ```
 
 ## Pre-trained Model
@@ -110,4 +110,8 @@ sub-0001.nii.gz     60     1
 sub-0002.nii.gz     74     0
 .......
 ```
+
+## Reference
+
+Brain Age Estimation From MRI Using Cascade Networks with Ranking Loss. Jian Cheng, Ziyang Liu, IEEE Transaction on Medical Imaging, 2021
 

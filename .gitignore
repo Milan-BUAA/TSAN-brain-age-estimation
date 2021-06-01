@@ -3,7 +3,8 @@ __pycache__/
 *.py[cod]
 *$py.class
 .vscode/
-
+TSAN/__pycache__/
+TSAN/model/__pycache__/
 # C extensions
 *.so
 
