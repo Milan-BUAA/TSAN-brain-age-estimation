@@ -83,6 +83,31 @@ Please check related websites for getting the datasets used in this paper:
 
 [PAC 2019 website archive](https://web.archive.org/web/20200214101600/https://www.photon-ai.com/pac2019)
 
-**Please consider star and/or watch this repository if you find it helpful, as we will keep updating this repository for pre-trained models and weights.**
+### Data Structure
 
-     
+Prepare the dataset in the following format for easy use of the code.  
+
+- Train, validation and test should contain completely unduplicated T1-weighted image samples.
+- The Excel file should include image file names, chronological age and sex labels for all samples from the three datasets.
+
+```
+Train Folder-----
+          sub-0001.nii.gz
+          sub-0002.nii.gz
+          .......
+
+Validation Folder-----
+          sub-0003.nii.gz
+          sub-0004.nii.gz
+          .......
+Test Folder-----
+          sub-0005.nii.gz
+          sub-0006.nii.gz
+          .......
+          
+Dataset.xlsx
+sub-0001.nii.gz     60     1
+sub-0002.nii.gz     74     0
+.......
+```
+
