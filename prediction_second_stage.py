@@ -196,7 +196,6 @@ def test( valid_loader, model, first_stage_model,criterion
             plt.scatter(target_numpy,predicted_numpy)
             plt.xlabel('Chronological Age')
             plt.ylabel('predicted brain age')
-            # plt.show()
             plt.savefig(opt.output_dir+figure_name)
         return MAE ,np.corrcoef(target_numpy,predicted_numpy)
 

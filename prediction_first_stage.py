@@ -91,15 +91,9 @@ def test(valid_loader, model, criterion, device
     MAE = AverageMeter()
 
     model.eval() # switch to evaluate mode
-    out = []
-    targ = []
-    ID = []
-    target_numpy = []
-    predicted_numpy = []
-    ID_numpy = []
-
+    out, targ, ID = [], [], []
+    target_numpy, predicted_numpy, ID_numpy = [], [], []
     print('======= start prediction =============')
-
     # ======= start test programmer ============= #
     with torch.no_grad():
         for _, (input, ids ,target,male) in enumerate(valid_loader):
