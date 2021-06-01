@@ -99,12 +99,8 @@ def test( valid_loader, model, first_stage_model,criterion
     MAE = AverageMeter()
 
     model.eval() # switch to evaluate mode
-    out = []
-    targ = []
-    ID = []
-    target_numpy = []
-    predicted_numpy = []
-    ID_numpy = []
+    out, targ, ID = [], [], []
+    target_numpy, predicted_numpy, ID_numpy = [], [], []
 
     print('======= start prediction =============')
 
