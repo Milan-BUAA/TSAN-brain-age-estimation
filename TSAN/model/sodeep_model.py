@@ -120,13 +120,3 @@ class lstm_large(nn.Module):
         out = self.conv1(out)
 
         return out.view(input_.size(0), -1)
-
-
-if __name__ == "__main__":
-    input = np.array([1,3,3,5,5,7],dtype=np.float32)
-    input = torch.FloatTensor(torch.from_numpy(input))
-    print(input)
-    rank = get_rank(input,dim=0)
-    tied_rank = get_tiedrank(input, dim=0)
-    print('get rank scores:', rank)
-    print('get tied rank scores:', tied_rank)

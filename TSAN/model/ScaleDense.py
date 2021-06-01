@@ -46,10 +46,10 @@ class dense_layer(nn.Module):
     def __init__(self,inchannels,outchannels):
         super(dense_layer,self).__init__()
         self.block = nn.Sequential(
-            AC_layer(inchannels,outchannels, self.deploy),
+            AC_layer(inchannels,outchannels),
             nn.BatchNorm3d(outchannels),
             nn.ELU(),
-            AC_layer(outchannels,outchannels, self.deploy),
+            AC_layer(outchannels,outchannels),
             nn.BatchNorm3d(outchannels),
             nn.ELU(),
             SE_block(outchannels),

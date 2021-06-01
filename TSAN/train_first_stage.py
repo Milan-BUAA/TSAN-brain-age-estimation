@@ -62,7 +62,7 @@ def main(res):
     
     # ===========  build and set model  =========== #  
     if opt.model == 'ScaleDense':
-        model = ScaleDense.ScaleDense(8, 5, opt.use_gender, False)
+        model = ScaleDense.ScaleDense(8, 5, opt.use_gender)
     else:
         print('Wrong model choose')
 
