@@ -30,11 +30,11 @@ def main(res):
 
     json_path = os.path.join(opt.output_dir,'hyperparameter.json')
     with open(json_path,'w') as f:
-            f.write(json.dumps(vars(opt)
-                            ,  ensure_ascii=False
-                            ,  indent=4
-                            ,  separators=(',', ':')))
-    print("=========== start train the age prediction model =========== \n")
+        f.write(json.dumps(vars(opt)
+                            ,ensure_ascii=False
+                            ,indent=4
+                            ,separators=(',', ':')))
+    print("=========== start train the brain age estimation model =========== \n")
     print(" ==========> Using {} processes for data loader.".format(opt.num_workers))
 
 
@@ -88,10 +88,10 @@ def main(res):
                                 )
     scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau( optimizer
                                                            ,verbose=1
-                                                           ,patience=3
-                                                           ,factor=0.1
+                                                           ,patience=5
+                                                           ,factor=0.5
                                                            )
-    early_stopping = EarlyStopping(patience=5, verbose=True)
+    early_stopping = EarlyStopping(patience=20, verbose=True)
     
     # =========== define tensorboardX and show traing start signal =========== #
     saved_metrics, saved_epos = [], []

@@ -94,10 +94,10 @@ def main(res):
                                ,weight_decay=opt.weight_decay)
     scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau( optimizer
                                                            ,verbose=1
-                                                           ,patience=3
-                                                           ,factor=0.1
+                                                           ,patience=5
+                                                           ,factor=0.5
                                                            )
-    early_stopping = EarlyStopping(patience=10, verbose=True)
+    early_stopping = EarlyStopping(patience=20, verbose=True)
     
     # =========== define tensorboardX and show traing start signal =========== #
     saved_metrics, saved_epos = [], []
