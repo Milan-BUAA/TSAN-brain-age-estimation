@@ -18,7 +18,7 @@ In this paper, a novel 3D convolutional network, called as two-stage-age-network
 
 ```
 git clone https://github.com/Milan-BUAA/TSAN-brain-age-estimation.git
-cd TSAN
+cd TSAN-brain-age-estimation
 ```
 
 
