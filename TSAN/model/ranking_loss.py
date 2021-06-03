@@ -26,7 +26,6 @@ class rank_difference_loss(torch.nn.Module):
 
     def forward(self, mem_pred, mem_gt):
         ranking_loss = self.spearman_loss(mem_pred, mem_gt)
-
         a = np.random.randint(0,mem_pred.size(0),mem_pred.size(0))
         b = np.random.randint(0,mem_gt.size(0),mem_gt.size(0))
         diff_mem_pred = (mem_pred[a]-mem_pred[b])

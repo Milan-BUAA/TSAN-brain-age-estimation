@@ -5,7 +5,7 @@ import numpy as np
 import torch.nn as nn
 from utils.config import opt
 from model import ScaleDense
-from model.loss import rank_difference_loss
+from model.ranking_loss import rank_difference_loss
 from load_data import IMG_Folder
 from prediction_first_stage import test
 from sklearn.metrics import mean_absolute_error
@@ -234,6 +234,7 @@ def train(train_loader, model, criterion1, criterion2, optimizer, device, epoch)
             male = male.to(device).type(torch.FloatTensor)
         input = img.to(device)
         target = target.type(torch.FloatTensor).to(device)
+        # target = torch.squeeze(target, dim=1)
 
         # =========== compute output and loss =========== #
         model.zero_grad()
@@ -242,7 +243,6 @@ def train(train_loader, model, criterion1, criterion2, optimizer, device, epoch)
 
         else:
             out = model(input)
-
         # =========== compute loss =========== #
         loss1 = criterion1(out, target)
         if opt.lbd > 0:

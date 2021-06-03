@@ -57,5 +57,6 @@ class IMG_Folder(torch.utils.data.Dataset):
             img = np.expand_dims(img, axis=0)
             img = np.ascontiguousarray(img, dtype= np.float32)
             img = torch.from_numpy(img).type(torch.FloatTensor)
+
             break
         return (img, sid, slabel, smale)
