@@ -115,22 +115,13 @@ sub-0002.nii.gz     74     0
 
 If this repository was useful to your work, please consider citing us:
 
-```
-- @article{cheng2021brain,
-  title={Brain Age Estimation From MRI Using Cascade Networks with Ranking Loss},
-  author={Cheng, Jian and Liu, Ziyang and Guan, Hao and Wu, Zhenzhou and Zhu Haogang and Jiang, Jiyang and Wen, Wei and Tao, Dacheng and Liu Tao},
-  journal={IEEE Transactions on Medical Imaging},
-  year={2021},
-  publisher={IEEE}
-}
+[1] Cheng, Jian, Ziyang Liu, Hao Guan, Zhenzhou Wu, Haogang Zhu, Jiyang Zhang, Wei Wen, Dacheng Tao and Tao Liu. "Brain Age Estimation From MRI Using Cascade Networks with Ranking Loss." *IEEE transactions on medical imaging* (2021).
 
-- @inproceedings{liu2020brain,
-  title={Brain Age Estimation from MRI Using a Two-Stage Cascade Network with Ranking Loss},
-  author={Liu, Ziyang and Cheng, Jian and Zhu, Haogang and Zhang, Jicong and Liu, Tao},
-  booktitle={International Conference on Medical Image Computing and Computer-Assisted Intervention},
-  pages={198--207},
-  year={2020},
-  organization={Springer}
-}
-```
+DOI: https://doi.org/10.1109/TMI.2021.3085948
+
+[2] Liu, Ziyang, Jian Cheng, Haogang Zhu, Jicong Zhang, and Tao Liu. "Brain Age Estimation from MRI Using a Two-Stage Cascade Network with Ranking Loss." In *International Conference on Medical Image Computing and Computer-Assisted Intervention*, pp. 198-207. Springer, Cham, 2020.
+
+DOI: https://doi.org/10.1007/978-3-030-59728-3_20
+
+
 
