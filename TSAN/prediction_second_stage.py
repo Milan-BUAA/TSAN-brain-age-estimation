@@ -1,4 +1,4 @@
-import os,torch
+import os,torch,warnings
 import numpy as np
 import torch.nn as nn
 import matplotlib.pyplot as plt
@@ -8,6 +8,7 @@ from model import ScaleDense,Second_stage_ScaleDense
 from scipy.stats import pearsonr,spearmanr
 from sklearn.metrics import mean_absolute_error
 from utils.discriminate_age import discriminate_age
+warnings.filterwarnings("ignore")
 
 class AverageMeter(object):
     """Computes and stores the average and current value"""
@@ -119,7 +120,7 @@ def test( valid_loader, model, first_stage_model,criterion
             target = target.type(torch.FloatTensor).to(device)
 
             first_stage_predict = first_stage_model(input,male).detach()
-            dis_age = discriminate_age(first_stage_predict,range=opt.dis_range).to(device)
+            dis_age = discriminate_age(first_stage_predict.cpu(),range=opt.dis_range).to(device)
         
             # ======= compute output and loss ======= #
             predicted_residual_age, output_age = model(input,male,dis_age)
