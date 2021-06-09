@@ -88,7 +88,7 @@ Please check related websites for getting the datasets used in this paper:
 Prepare the dataset in the following format for easy use of the code.  
 
 - Train, validation and test should contain completely unduplicated T1-weighted image samples.
-- The Excel file should include image file names, chronological age and sex labels for all samples from the three datasets.
+- The Excel file should include image file names, chronological age and sex labels ('0' for female and '1' for male) for all samples from the three datasets.
 
 ```
 Train Folder-----
@@ -105,7 +105,8 @@ Test Folder-----
           sub-0006.nii.gz
           .......
           
-Dataset.xlsx
+Dataset.xls 
+
 sub-0001.nii.gz     60     1
 sub-0002.nii.gz     74     0
 .......
