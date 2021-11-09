@@ -2,17 +2,17 @@
 
 model=ScaleDense
 loss=mse
-batch_size=8
+batch_size=32
 lbd=10
 beta=1
-save_path=../pretrained_model/ScaleDense/
-label=./data/dataset.xlsx
+save_path=./pretrained_model/ScaleDense/
+label=./data/dataset.xls
 
 train_data=./data/train
 valid_data=./data/val
 test_data=./data/test
 
-sorter_path=./TSAN/Sodeep_pretrain_weight/best_lstmla_slen_${batch_size}.pth.tar
+sorter_path=./TSAN/Sodeep_pretrain_weight/Tied_rank_best_lstmla_slen_${batch_size}.pth.tar
 
 # ------ train and set the parameter
 CUDA_VISIBLE_DEVICES=0     python ./TSAN/train_first_stage.py       \
@@ -31,7 +31,6 @@ CUDA_VISIBLE_DEVICES=0     python ./TSAN/train_first_stage.py       \
 --model                    ${model}            \
 --output_dir               ${save_path}        \
 --sorter                   ${sorter_path}      \
-
 # ============= Hyperparameter Description ============== #
 # --batch_size        Batch size during training process
 # --epochs            Total training epochs

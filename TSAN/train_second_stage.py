@@ -1,5 +1,5 @@
 import os,torch,json
-import datetime
+import datetime, warnings
 import tensorboardX
 import numpy as np
 import torch.nn as nn
@@ -7,10 +7,10 @@ from utils.config import opt
 from utils.discriminate_age import discriminate_age
 from prediction_second_stage import test
 from model import ScaleDense,Second_stage_ScaleDense
-from model.loss import rank_difference_loss
+from model.ranking_loss import rank_difference_loss
 from load_data import IMG_Folder
 from sklearn.metrics import mean_absolute_error
-
+warnings.filterwarnings("ignore")
 
 torch.manual_seed(0)
 torch.cuda.manual_seed_all(0)
@@ -247,8 +247,9 @@ def train(train_loader, model, first_stage_model,criterion1, criterion2, optimiz
         target = target.type(torch.FloatTensor).to(device)
 
         first_stage_predict = first_stage_model(input,male).detach()
-        dis_age = discriminate_age(first_stage_predict,range=opt.dis_range).to(device)
+        dis_age = discriminate_age(first_stage_predict.cpu(),range=opt.dis_range).to(device)
         # =========== compute output and loss =========== #
+        model.train()
         model.zero_grad()
         
         predicted_residual_age, output_age = model(input, male, dis_age)
@@ -318,7 +319,7 @@ def validate(valid_loader, model, first_stage_model,criterion1,criterion2, devic
             target = target.type(torch.FloatTensor).to(device)
 
             first_stage_predict = first_stage_model(input,male).detach()
-            dis_age = discriminate_age(first_stage_predict,range=opt.dis_range).to(device)
+            dis_age = discriminate_age(first_stage_predict.cpu(),range=opt.dis_range).to(device)
         
             # =========== compute output and loss =========== #
             predicted_residual_age, output_age = model(input, male, dis_age)

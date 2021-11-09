@@ -2,9 +2,9 @@
 model=ScaleDense
 batch_size=32
 test_dirpath=./data/test
-excel_dirpath=./data/dataset.xlsx
+excel_dirpath=./data/dataset.xls
 sorter_path=./TASN/Sodeep_pretrain_weight/best_lstmla_slen_${batch_size}.pth.tar
-model_dirpath=./pretrained_model/second_stage/
+model_dirpath=./pretrained_model/ScaleDense/
 
 # ------ train and set the parameter
 CUDA_VISIBLE_DEVICES=0 python ./TSAN/prediction_first_stage.py \

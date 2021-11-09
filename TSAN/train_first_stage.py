@@ -1,5 +1,5 @@
 import os,torch,json
-import datetime
+import datetime, warnings
 import tensorboardX
 import numpy as np
 import torch.nn as nn
@@ -9,6 +9,7 @@ from model.ranking_loss import rank_difference_loss
 from load_data import IMG_Folder
 from prediction_first_stage import test
 from sklearn.metrics import mean_absolute_error
+warnings.filterwarnings("ignore")
 
 
 torch.manual_seed(0)
@@ -237,6 +238,7 @@ def train(train_loader, model, criterion1, criterion2, optimizer, device, epoch)
         # target = torch.squeeze(target, dim=1)
 
         # =========== compute output and loss =========== #
+        model.train()
         model.zero_grad()
         if opt.model == 'ScaleDense':
             out = model(input, male)

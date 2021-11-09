@@ -3,12 +3,12 @@
 dis_range=5
 model=ScaleDense
 loss=mse
-batch_size=8
+batch_size=32
 lbd=10
 beta=1
 first_stage_net=./pretrained_model/ScaleDense/ScaleDense_best_model.pth.tar
-save_path=./pretrained_model/second_stage/
-label=./data/dataset.xlsx
+save_path=./pretrained_model/second_stage_test/
+label=./data/dataset.xls
 
 train_data=./data/train
 valid_data=./data/val

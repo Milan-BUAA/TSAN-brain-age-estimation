@@ -130,5 +130,4 @@ class SpearmanLoss(torch.nn.Module):
         rank_gt = get_tiedrank(mem_gt)
 
         rank_pred = self.sorter(mem_pred.unsqueeze(0)).view(-1)
-        print(rank_gt.shape, rank_pred.shape)
         return self.criterion_mse(rank_pred, rank_gt) + self.lbd * self.criterionl1(mem_pred, mem_gt)

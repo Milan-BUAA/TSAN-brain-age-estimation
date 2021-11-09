@@ -1,6 +1,6 @@
 # Brain Age Estimation From MRI Using Cascade Networks with Ranking Loss
 
-Pytorch Code for the paper "Brain Age Estimation From MRI Using Cascade Networks with Ranking Loss" 
+Pytorch codes for the paper "[Brain Age Estimation From MRI Using Cascade Networks with Ranking Loss](https://doi.org/10.1109/TMI.2021.3085948)", *IEEE transactions on Medical Imaging*, 2021 
 
 ## Abstract
 
@@ -71,7 +71,7 @@ bash script/bash_test_second_stage.sh
 ```
 
 ## Pre-trained Model
-Download the ScaleDense and The second stage ScaleDense pretrained model: [Beihang Cloud](https://bhpan.buaa.edu.cn:443/link/7C6286240B710575452B3E8220032732)
+Download the pretrained first-stage ScaleDense model and the second-stage model: [Beihang Cloud](https://bhpan.buaa.edu.cn:443/link/7C6286240B710575452B3E8220032732)
 
 ## Datasets
 
@@ -88,7 +88,7 @@ Please check related websites for getting the datasets used in this paper:
 Prepare the dataset in the following format for easy use of the code.  
 
 - Train, validation and test should contain completely unduplicated T1-weighted image samples.
-- The Excel file should include image file names, chronological age and sex labels for all samples from the three datasets.
+- The Excel file should include image file names, chronological age and sex labels ('0' for female and '1' for male) for all samples from the three datasets.
 
 ```
 Train Folder-----
@@ -105,7 +105,8 @@ Test Folder-----
           sub-0006.nii.gz
           .......
           
-Dataset.xlsx
+Dataset.xls 
+
 sub-0001.nii.gz     60     1
 sub-0002.nii.gz     74     0
 .......
@@ -113,15 +114,11 @@ sub-0002.nii.gz     74     0
 
 ## Reference
 
-If this repository was useful to your work, please consider citing us:
+If this repository is useful for your work, please cite the references:
 
-[1] Cheng, Jian, Ziyang Liu, Hao Guan, Zhenzhou Wu, Haogang Zhu, Jiyang Zhang, Wei Wen, Dacheng Tao and Tao Liu. "Brain Age Estimation From MRI Using Cascade Networks with Ranking Loss." *IEEE transactions on medical imaging* (2021).
+[1] Jian Cheng, Ziyang Liu, Hao Guan, Zhenzhou Wu, Haogang Zhu, Jiyang Jiang, Wei Wen, Dacheng Tao, Tao Liu, "[Brain Age Estimation From MRI Using Cascade Networks with Ranking Loss](https://doi.org/10.1109/TMI.2021.3085948)." *IEEE transactions on Medical Imaging*, 2021. [[arxiv](https://arxiv.org/pdf/2106.03052.pdf)]
 
-DOI: https://doi.org/10.1109/TMI.2021.3085948
-
-[2] Liu, Ziyang, Jian Cheng, Haogang Zhu, Jicong Zhang, and Tao Liu. "Brain Age Estimation from MRI Using a Two-Stage Cascade Network with Ranking Loss." In *International Conference on Medical Image Computing and Computer-Assisted Intervention*, pp. 198-207. Springer, Cham, 2020.
-
-DOI: https://doi.org/10.1007/978-3-030-59728-3_20
+[2] Ziyang Liu, Jian Cheng, Haogang Zhu, Jicong Zhang, and Tao Liu, "[Brain Age Estimation from MRI Using a Two-Stage Cascade Network with Ranking Loss](https://doi.org/10.1007/978-3-030-59728-3_20)." In *International Conference on Medical Image Computing and Computer-Assisted Intervention*, pp. 198-207. Springer, Cham, 2020.
 
 
 
