@@ -32,7 +32,9 @@ In *multi-thread-prep.sh* file, you only need to set raw data folder, and repeat
 
 ------
 
-In summary, after executing our preprocessing pipeline,  the data organization will change from
+In summary, after executing our preprocessing pipeline,  the data organization will change
+ 
+From
 
 ```
 Raw data Folder-----
@@ -41,7 +43,7 @@ Raw data Folder-----
           .......
 ```
 
-to
+To
 
 ```
 Processed data Folder-----
