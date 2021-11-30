@@ -10,15 +10,27 @@ pip (){
     local sta=$1
     local num=$2
     echo "process $sta : $((sta+num))"
-    for file in ${files[@]:$sta:$num};do
-
-    # echo $file
     
-    fsl_anat_tsan -i $file
+    #loop
+    for file in ${files[@]:$sta:$num};do
+        
+        # new folder
+        data_folder=${file::7}
+        mkdir $data_folder
+        mv $file $data_folder
+        cd $data_folder
+
+        # pre-process
+        fsl_anat_tsan -i $file
+        echo "done pre-processing"
+        echo
+
+        # ori folder
+        cd ..
     done
 }
 pip 1 300 &
-pip 301 300&
+pip 301 300 &
 pip 601 300 &
 pip 901 300 &
 pip 1201 300 &
