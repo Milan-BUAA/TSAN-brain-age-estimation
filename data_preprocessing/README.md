@@ -28,12 +28,18 @@ for file in ./raw_data/*; do fsl_anat_tsan -i $file; done
 
 Due to the large number of images that need to be preprocessed, we also wrote a simple script that can execute fsl_anat_tsan in multiple threads,  named [multi-thread-prep.sh](https://github.com/Milan-BUAA/TSAN-brain-age-estimation/blob/master/data_preprocessing/multi-thread-prep.sh) 
 
-In *multi-thread-prep.sh* file, you only need to set raw data folder, and repeatedly set the start index and number of image need to be processed.
+In *multi-thread-prep.sh* file, you only need to set raw data folder, and repeatedly set the start index and number of image need to be processed.  
+
+```
+bash multi-thread-prep.sh
+```
+
+
 
 ------
 
 In summary, after executing our preprocessing pipeline,  the data organization will change
- 
+
 From
 
 ```
