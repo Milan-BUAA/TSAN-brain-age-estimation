@@ -29,6 +29,15 @@ pip (){
         cd ..
     done
 }
+
+# Example:
+# Suppose we have 3000 cases of MRI images that need to be preprocessed, 
+# and we want to use 10 threads in the server for parallel processing, 
+# so that each thread will allocate 300 cases of data for processing 
+
+# When calling the pip function, 
+# you only need to set the starting index number of the preprocessed data and 
+# the number of data to be processed by the thread 
 pip 1 300 &
 pip 301 300 &
 pip 601 300 &
@@ -39,3 +48,4 @@ pip 1801 300 &
 pip 2101 300 &
 pip 2401 300 &
 pip 2701 300 &
+
