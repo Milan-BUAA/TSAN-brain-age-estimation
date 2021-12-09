@@ -39,7 +39,7 @@ pip install -r requirements.txt
 ```
 
 - ### **Data Pre-Processing:**
-  Before performing training and testing, all MRI data needs to be preprocessed. All MRIs in datasets were processed by using a standardpreprocessing pipeline with FSL, including nonlinear registration to the standard MNI space and brain extraction. All MRIs after preprocessing have voxel size of $91 \times 109 \times 91$ with isotropic spatial resolution of $2 mm^{3}$. Details data preprocessing method see [here]().
+  Before performing training and testing, all MRI data needs to be preprocessed. All MRIs in datasets were processed by using a standardpreprocessing pipeline with FSL, including nonlinear registration to the standard MNI space and brain extraction. All MRIs after preprocessing have voxel size of $91 \times 109 \times 91$ with isotropic spatial resolution of $2 mm^{3}$. Details data preprocessing method see [here](https://github.com/Milan-BUAA/TSAN-brain-age-estimation/tree/master/data_preprocessing).
 
 - ### **Training Command:**
 
