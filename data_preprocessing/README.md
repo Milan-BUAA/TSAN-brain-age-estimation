@@ -40,7 +40,7 @@ bash multi-thread-prep.sh
 
 In summary, after executing our preprocessing pipeline,  the data organization will change
 
-From
+**From**
 
 ```
 Raw data Folder-----
@@ -49,7 +49,7 @@ Raw data Folder-----
           .......
 ```
 
-To
+**To**
 
 ```
 Processed data Folder-----
@@ -70,3 +70,56 @@ Processed data Folder-----
           .......
 ```
 
+## Reorganize the preprocessed resulting images for Training or Testing
+
+According to the above image preprocessing scripts, we will get a variety of preprocessing results of the original image. However, as for brain age estimation with TSAN, our models were trained by image with brain extraction and non-linear registration. Therefore, we wrote a simple script to reorganize the preprocessed image files and classify them for subsequent training and testing
+
+```shell
+python Extract-File-From-Prep.py --sdir /data/brain_age_estimation/ --tdir /data/brain_age_estimation_prep-org/ --keyword .anat
+```
+
+After excuting this reorgnization script, the data organization will change
+
+**From**
+
+```
+Processed data Folder-----
+          sub-0001/
+                sub-001.nii.gz 
+                sub-001.anat/
+                    T1_to_MNI_lin.nii.gz
+                    T1_to_MNI_nonlin.nii.gz
+                    T1_to_MNI_nonlin_brain.nii.gz
+                    .......
+          sub-0002/
+                sub-001.nii.gz
+                sub-001.anat/
+                    T1_to_MNI_lin.nii.gz
+                    T1_to_MNI_nonlin.nii.gz
+                    T1_to_MNI_nonlin_brain.nii.gz
+                    .......
+          .......
+```
+
+**To**
+
+```
+Reorganize data Folder-----
+        linear/
+            sub-001_lin.nii.gz
+            sub-002_lin.nii.gz
+            sub-003_lin.nii.gz
+            .......
+
+        nonlinear/ 
+            sub-001_nonlin.nii.gz
+            sub-002_nonlin.nii.gz
+            sub-003_nonlin.nii.gz      
+            .......
+      
+        nonlin_brain/
+            sub-001_nonlin_brain.nii.gz
+            sub-002_nonlin_brain.nii.gz
+            sub-003_nonlin_brain.nii.gz
+            .......
+```
