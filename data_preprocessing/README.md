@@ -132,7 +132,7 @@ According the above steps, the preprocessed T1-weighted images have now been obt
 If you want to do transfer learning or fine tuning, you can excute our *train-test-split.py* code to divide the preprocessed data into training, validation and test set. In our paper, Train: Val: Test = 70% : 15% : 15%
 
 ```
-python train-test-split.py -sdir /data/brain_age_estimation_prep-org/nonlin_brain -tdir /data/brain_age_estimation_transfer_learning/ -train 0.75 -val 0.15 -test 0.15
+python train-test-split.py --sdir /data/brain_age_estimation_prep-org/nonlin_brain --tdir /data/brain_age_estimation_transfer_learning/ --train 0.75 --val 0.15 --test 0.15
 ```
 
 After Train-Test-split, the data organization will change to
