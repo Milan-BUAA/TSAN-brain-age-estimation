@@ -1,7 +1,7 @@
 import torch
 import numpy as np 
 
-def discriminate_age(age, range=5):
+def discretize_age(age, range=5):
     '''
     [summary]
 
