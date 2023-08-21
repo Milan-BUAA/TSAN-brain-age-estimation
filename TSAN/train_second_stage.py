@@ -8,7 +8,7 @@ from TSAN.utils.discretize_age import discretize_age
 from prediction_second_stage import test
 from model import ScaleDense,Second_stage_ScaleDense
 from model.ranking_loss import rank_difference_loss
-from load_data import IMG_Folder
+from load_data import IMG_Folder,Integer_Multiple_Batch_Size
 from sklearn.metrics import mean_absolute_error
 warnings.filterwarnings("ignore")
 
@@ -42,10 +42,8 @@ def main(res):
 
 
     # ===========  define data folder and CUDA device =========== #
-    train_data = IMG_Folder( opt.excel_path
-                            ,opt.train_folder)
-    valid_data = IMG_Folder( opt.excel_path
-                            ,opt.valid_folder)
+    train_data = Integer_Multiple_Batch_Size(IMG_Folder( opt.excel_path,opt.train_folder), opt.batch_size)
+    valid_data = Integer_Multiple_Batch_Size(IMG_Folder( opt.excel_path,opt.valid_folder), opt.batch_size)
     
 
     # ===========  define data loader =========== #
@@ -53,14 +51,14 @@ def main(res):
                                                 ,batch_size=opt.batch_size
                                                 ,num_workers=opt.num_workers
                                                 ,pin_memory=True
-                                                ,drop_last=True
+                                                ,drop_last=False
                                                 ,shuffle=True
                                                 )
     valid_loader = torch.utils.data.DataLoader(  valid_data
                                                 ,batch_size=opt.batch_size 
                                                 ,num_workers=opt.num_workers 
                                                 ,pin_memory=True
-                                                ,drop_last=True
+                                                ,drop_last=False
                                                 )
 
 
@@ -186,12 +184,12 @@ def main(res):
     torch.cuda.empty_cache()
     # =========== test the trained model on test dataset =========== #
 
-    test_data = IMG_Folder(opt.excel_path, opt.test_folder)
+    test_data = Integer_Multiple_Batch_Size(IMG_Folder(opt.excel_path, opt.test_folder),opt.batch_size)
     test_loader = torch.utils.data.DataLoader( test_data
                                               ,batch_size=opt.batch_size 
                                               ,num_workers=opt.num_workers 
                                               ,pin_memory=True
-                                              ,drop_last=True)
+                                              ,drop_last=False)
 
     # =========== test on the best model on test data =========== # 
     model_best = model_test

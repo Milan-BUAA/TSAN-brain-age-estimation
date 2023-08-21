@@ -34,7 +34,7 @@ def metric(output, target):
 
 def main():
     # ======== define data loader and CUDA device ======== #
-    test_data = IMG_Folder(opt.excel_path, opt.test_folder)
+    test_data = Integer_Multiple_Batch_Size(IMG_Folder(opt.excel_path, opt.test_folder),opt.batch_size)
     device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 
     # ========  build and set model  ======== #  
@@ -53,7 +53,7 @@ def main():
                                              ,batch_size=opt.batch_size
                                              ,num_workers=opt.num_workers
                                              ,pin_memory=True
-                                             ,drop_last=True
+                                             ,drop_last=False
                                              )
 
     # ======== test preformance ======== #

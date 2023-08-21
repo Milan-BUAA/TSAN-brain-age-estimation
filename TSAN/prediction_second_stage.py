@@ -3,7 +3,7 @@ import numpy as np
 import torch.nn as nn
 import matplotlib.pyplot as plt
 from utils.config import opt
-from load_data import IMG_Folder
+from load_data import IMG_Folder,Integer_Multiple_Batch_Size
 from model import ScaleDense,Second_stage_ScaleDense
 from scipy.stats import pearsonr,spearmanr
 from sklearn.metrics import mean_absolute_error
@@ -36,7 +36,7 @@ def metric(output, target):
 
 def main():
     # ======== define data loader and CUDA device ======== #
-    test_data = IMG_Folder(opt.excel_path, opt.test_folder)
+    test_data = Integer_Multiple_Batch_Size(IMG_Folder(opt.excel_path, opt.test_folder),opt.batch_size)
     device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 
     # ========  build and set model  ======== #  
@@ -61,7 +61,7 @@ def main():
                                              ,batch_size=opt.batch_size
                                              ,num_workers=opt.num_workers
                                              ,pin_memory=True
-                                             ,drop_last=True
+                                             ,drop_last=False
                                              )
 
     # ======== test preformance ======== #
