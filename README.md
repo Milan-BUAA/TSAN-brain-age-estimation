@@ -74,7 +74,7 @@ bash script/bash_test_second_stage.sh
 ```
 
 ## Pre-trained Model
-Download the pretrained first-stage ScaleDense model and the second-stage model: [Beihang Cloud](https://bhpan.buaa.edu.cn:443/link/7C6286240B710575452B3E8220032732)
+Download the pretrained first-stage ScaleDense model and the second-stage model: [Beihang Cloud](https://bhpan.buaa.edu.cn/link/AAAEF26316810C428DA667D36A41246BE8)
 
 ## Datasets
 
