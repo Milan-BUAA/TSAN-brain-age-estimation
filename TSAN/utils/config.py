@@ -18,10 +18,16 @@ parser.add_argument('--num_workers' ,default=8           ,type=int,   help="The 
 parser.add_argument('--batch_size'  ,default=8           ,type=int,   help="Batch size during training process")
 parser.add_argument('--epochs'      ,default=100         ,type=int,   help="Total training epochs")
 parser.add_argument('--lr'          ,default=1e-3        ,type=float, help="Initial learning rate")
-parser.add_argument('--print_freq'  ,default=5           ,type=int,   help="Training log print interval")
+parser.add_argument('--schedular', type=str, default='cosine',help='choose the scheduler')
+parser.add_argument('--print_freq'  ,default=40           ,type=int,   help="Training log print interval")
 parser.add_argument('--weight_decay',default=5e-4        ,type=float, help="L2 weight decay ")
 parser.add_argument('--use_gender'  ,default=True        ,type=bool,  help="If use sex label during training")
 parser.add_argument('--dis_range'   ,default=5           ,type=int,   help="Discritize step when training the second stage network")
+
+# warmup and cosine_lr_scheduler
+parser.add_argument('--warmup_lr_init', type=float, default=5e-7 )
+parser.add_argument('--warmup_epoch', type=int, default=0)
+parser.add_argument('--min_lr', type=float, default=5e-6 )
 
 # =========== loss function ================ #
 parser.add_argument('--loss',       default='mse'       ,type=str,     help="Main loss fuction for training network")
