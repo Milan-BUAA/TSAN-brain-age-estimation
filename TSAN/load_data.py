@@ -6,7 +6,7 @@ import pandas as pd
 
 def nii_loader(path):
     img = nib.load(str(path))
-    data = img.get_data()
+    data = img.get_fdata()
     return data
 
 def read_table(path):
@@ -21,7 +21,7 @@ def white0(image, threshold=0):
     image_l = image * (1 - mask)
 
     mean = np.sum(image_h) / np.sum(mask)
-    std = np.sqrt(np.sum(np.abs(image_h - mean)**2) / np.sum(mask))
+    std = np.sqrt(np.sum(np.abs(image_h - mean)**2 * mask) / np.sum(mask))
 
     if std > 0:
         ret = (image_h - mean) / std + image_l
